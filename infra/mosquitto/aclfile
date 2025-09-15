@@ -1,0 +1,11 @@
+# admin full
+user admin
+topic readwrite #
+
+# Dispositivo dev-001 (ejemplo)
+user dev-001
+topic read microgrid/dev-001/#
+topic write microgrid/dev-001/telemetry
+topic write microgrid/dev-001/status
+topic read microgrid/dev-001/cmd
+topic read microgrid/dev-001/cfg
