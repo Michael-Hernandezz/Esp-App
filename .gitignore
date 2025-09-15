@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node/Front (por si agregas UI)
+node_modules/
+dist/
+
+# PlatformIO
+.pio/
+
+# Docker/infra secrets
+infra/.env
+api/.env
+infra/mosquitto/passwordfile
+
+# VSCode
+.vscode/
+
+# Sistemas
+.DS_Store
+Thumbs.db

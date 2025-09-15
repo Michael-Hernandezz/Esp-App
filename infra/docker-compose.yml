@@ -1,0 +1,78 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/passwordfile:/mosquitto/config/passwordfile
+      - ./mosquitto/aclfile:/mosquitto/config/aclfile
+      - mosq-data:/mosquitto/data
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_INIT_USERNAME}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_INIT_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_INIT_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_INIT_BUCKET}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_INIT_ADMIN_TOKEN}
+    volumes:
+      - influx-data:/var/lib/influxdb2
+      - influx-config:/etc/influxdb2
+
+  telegraf:
+    image: telegraf:1.30
+    container_name: telegraf
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+      - influxdb
+    environment:
+      INFLUX_HOST: http://influxdb:8086
+      INFLUX_TOKEN: ${INFLUXDB_INIT_ADMIN_TOKEN}
+      INFLUX_ORG: ${INFLUXDB_INIT_ORG}
+      INFLUX_BUCKET: ${INFLUXDB_INIT_BUCKET}
+      MQTT_USER: ${MQTT_ADMIN_USER}
+      MQTT_PASS: ${MQTT_ADMIN_PASS}
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+
+  api:
+    build: ../api
+    container_name: microgrid-api
+    restart: unless-stopped
+    env_file: ../api/.env
+    depends_on:
+      - mosquitto
+    ports:
+      - "8000:8000"
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASS}
+      INFLUX_ORG: ${INFLUXDB_INIT_ORG}
+      INFLUX_BUCKET: ${INFLUXDB_INIT_BUCKET}
+      INFLUX_TOKEN: ${INFLUXDB_INIT_ADMIN_TOKEN}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
+volumes:
+  influx-data:
+  influx-config:
+  mosq-data:
