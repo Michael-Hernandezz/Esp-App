@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 BROKER = os.getenv("MQTT_HOST", "localhost")
 PORT = int(os.getenv("MQTT_PORT", "1883"))
 USER = os.getenv("MQTT_USER", "admin")
-PASS = os.getenv("MQTT_PASS", "admin")
+PASS = os.getenv("MQTT_PASS", "admin12345")
 BASE = os.getenv("MQTT_BASE", "microgrid")
 DEVICE_ID = os.getenv("DEVICE_ID", "dev-001")
 REPORT_MS = int(os.getenv("REPORT_MS", "1000"))
