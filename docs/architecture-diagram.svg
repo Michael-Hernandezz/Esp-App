@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style>.title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 14px; fill: #34495e; }
+      .device-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; rx: 8; }
+      .service-box { fill: #2ecc71; stroke: #27ae60; stroke-width: 2; rx: 8; }
+      .storage-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; rx: 8; }
+      .ui-box { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; rx: 8; }
+      .mqtt-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; rx: 8; }
+      .api-box { fill: #1abc9c; stroke: #16a085; stroke-width: 2; rx: 8; }
+      .text-white { fill: white; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+      .text-small { fill: white; font-family: Arial, sans-serif; font-size: 10px; }
+      .arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .data-flow { stroke: #e67e22; stroke-width: 3; fill: none; marker-end: url(#arrowhead-orange); }
+      .legend-text { font-family: Arial, sans-serif; font-size: 11px; fill: #2c3e50; }</style>
+ </defs>
+ <!-- Background -->
+ <!-- Title -->
+ <!-- IoT Device Layer -->
+ <!-- ESP32 -->
+ <!-- Simulator -->
+ <!-- Communication Layer -->
+ <!-- MQTT Broker -->
+ <!-- Processing Layer -->
+ <!-- Telegraf -->
+ <!-- API -->
+ <!-- Storage Layer -->
+ <!-- InfluxDB -->
+ <!-- Visualization Layer -->
+ <!-- Grafana -->
+ <!-- Flutter App -->
+ <!-- Right side - Data Flow Details -->
+ <!-- Data format box -->
+ <!-- Infrastructure box -->
+ <!-- Features box -->
+ <!-- Data Flow Arrows -->
+ <!-- ESP32/Simulator to MQTT -->
+ <!-- MQTT to Telegraf -->
+ <!-- Telegraf to InfluxDB -->
+ <!-- MQTT to API -->
+ <!-- InfluxDB to Grafana -->
+ <!-- API to Flutter -->
+ <!-- Legend -->
+ <!-- Footer -->
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect fill="#ecf0f1" height="800" id="svg_3" transform="matrix(1 0 0 1 0 0)" width="1200" y="-7"/>
+  <text class="title" id="svg_4" text-anchor="middle" x="600" y="30">Arquitectura del Sistema Microgrid IoT</text>
+  <text class="subtitle" id="svg_5" text-anchor="middle" x="600" y="50">ESP32 → MQTT → InfluxDB → Grafana/Flutter</text>
+  <text class="subtitle" font-weight="bold" id="svg_6" transform="matrix(1 0 0 1 0 0) matrix(1 0 0 1 83 13)" x="52" y="85">Dispositivos IoT</text>
+  <rect class="device-box" height="80" id="svg_7" width="120" x="50" y="120"/>
+  <text class="text-white" id="svg_8" text-anchor="middle" x="110" y="140">ESP32</text>
+  <text class="text-small" id="svg_9" text-anchor="middle" x="110" y="155">Microcontrolador</text>
+  <text class="text-small" id="svg_10" text-anchor="middle" x="110" y="170">WiFi + Sensores</text>
+  <text class="text-small" id="svg_11" text-anchor="middle" x="110" y="185">dev-001</text>
+  <rect class="device-box" height="80" id="svg_12" width="120" x="190" y="120"/>
+  <text class="text-white" id="svg_13" text-anchor="middle" x="250" y="140">Simulador</text>
+  <text class="text-small" id="svg_14" text-anchor="middle" x="250" y="155">Python Script</text>
+  <text class="text-small" id="svg_15" text-anchor="middle" x="250" y="170">Para desarrollo</text>
+  <text class="text-small" id="svg_16" text-anchor="middle" x="250" y="185">simulate_device.py</text>
+  <text class="subtitle" font-weight="bold" id="svg_17" transform="matrix(1 0 0 1 0 0)" x="26" y="245">Comunicación</text>
+  <rect class="mqtt-box" height="80" id="svg_18" width="160" x="120" y="270"/>
+  <text class="text-white" id="svg_19" text-anchor="middle" x="200" y="290">Eclipse Mosquitto</text>
+  <text class="text-small" id="svg_20" text-anchor="middle" x="200" y="305">MQTT Broker</text>
+  <text class="text-small" id="svg_21" text-anchor="middle" x="200" y="320">Puerto: 1883</text>
+  <text class="text-small" id="svg_22" text-anchor="middle" x="200" y="335">Topics: microgrid/+/telemetry</text>
+  <text class="subtitle" font-weight="bold" id="svg_23" transform="matrix(1 0 0 1 0 0) matrix(0.793348 0 0 1.57699 3.79335 -194.258)" x="7.04" y="370.97">Procesamiento de Datos</text>
+  <rect class="service-box" height="80" id="svg_24" width="120" x="50" y="420"/>
+  <text class="text-white" id="svg_25" text-anchor="middle" x="110" y="440">Telegraf</text>
+  <text class="text-small" id="svg_26" text-anchor="middle" x="110" y="455">Data Collector</text>
+  <text class="text-small" id="svg_27" text-anchor="middle" x="110" y="470">MQTT → InfluxDB</text>
+  <text class="text-small" id="svg_28" text-anchor="middle" x="110" y="485">v1.30</text>
+  <rect class="api-box" height="80" id="svg_29" width="120" x="190" y="420"/>
+  <text class="text-white" id="svg_30" text-anchor="middle" x="250" y="440">FastAPI</text>
+  <text class="text-small" id="svg_31" text-anchor="middle" x="250" y="455">REST API</text>
+  <text class="text-small" id="svg_32" text-anchor="middle" x="250" y="470">Puerto: 8000</text>
+  <text class="text-small" id="svg_33" text-anchor="middle" x="250" y="485">Python/Uvicorn</text>
+  <text class="subtitle" font-weight="bold" id="svg_34" transform="matrix(1 0 0 1 0 0)" x="19" y="550">Almacenamiento</text>
+  <rect class="storage-box" height="80" id="svg_35" transform="matrix(1 0 0 1 0 0)" width="160" x="45" y="570"/>
+  <text class="text-white" id="svg_36" text-anchor="middle" transform="matrix(1 0 0 1 0 0)" x="126" y="590">InfluxDB</text>
+  <text class="text-small" id="svg_37" text-anchor="middle" transform="matrix(1 0 0 1 0 0)" x="129" y="605">Time Series Database</text>
+  <text class="text-small" id="svg_38" text-anchor="middle" transform="matrix(1 0 0 1 0 0)" x="124" y="620">Puerto: 8086</text>
+  <text class="text-small" id="svg_39" text-anchor="middle" transform="matrix(1 0 0 1 0 0)" x="133" y="635">v2.7 - Bucket: telemetry</text>
+  <text class="subtitle" font-weight="bold" id="svg_40" transform="matrix(1 0 0 1 0 0)" x="30" y="679">Visualización</text>
+  <rect class="ui-box" height="60" id="svg_41" width="120" x="50" y="720"/>
+  <text class="text-white" id="svg_42" text-anchor="middle" x="110" y="740">Grafana</text>
+  <text class="text-small" id="svg_43" text-anchor="middle" x="110" y="755">Web Dashboard</text>
+  <text class="text-small" id="svg_44" text-anchor="middle" x="110" y="770">Puerto: 3000</text>
+  <rect class="ui-box" height="60" id="svg_45" width="120" x="190" y="720"/>
+  <text class="text-white" id="svg_46" text-anchor="middle" x="250" y="740">Flutter App</text>
+  <text class="text-small" id="svg_47" text-anchor="middle" x="250" y="755">Aplicación Móvil</text>
+  <text class="text-small" id="svg_48" text-anchor="middle" x="250" y="770">Android/iOS</text>
+  <text class="subtitle" font-weight="bold" id="svg_49" x="400" y="100">Flujo de Datos</text>
+  <rect fill="#f8f9fa" height="200" id="svg_50" rx="4" stroke="#dee2e6" width="300" x="400" y="120"/>
+  <text class="legend-text" font-weight="bold" id="svg_51" x="410" y="140">Formato de Datos Telemetría:</text>
+  <text class="legend-text" id="svg_52" x="410" y="160">Topic: microgrid/{device_id}/telemetry</text>
+  <text class="legend-text" id="svg_53" x="410" y="180">Payload (JSON):</text>
+  <text class="legend-text" id="svg_54" x="420" y="200">• v: Voltaje (V)</text>
+  <text class="legend-text" id="svg_55" x="420" y="215">• i: Corriente (A)</text>
+  <text class="legend-text" id="svg_56" x="420" y="230">• p: Potencia (W)</text>
+  <text class="legend-text" id="svg_57" x="420" y="245">• temp: Temperatura (°C)</text>
+  <text class="legend-text" id="svg_58" x="420" y="260">• status: Estado del dispositivo</text>
+  <text class="legend-text" id="svg_59" x="420" y="275">• timestamp: Marca temporal</text>
+  <text class="legend-text" id="svg_60" x="420" y="295">Frecuencia: 1 segundo</text>
+  <text class="legend-text" id="svg_61" x="420" y="310">QoS: 1 (At least once)</text>
+  <rect fill="#f8f9fa" height="300" id="svg_62" rx="4" stroke="#dee2e6" width="400" x="750" y="120"/>
+  <text class="legend-text" font-weight="bold" id="svg_63" x="760" y="140">Infraestructura y Configuración:</text>
+  <text class="legend-text" font-weight="bold" id="svg_64" x="760" y="165">Docker Compose Services:</text>
+  <text class="legend-text" id="svg_65" x="770" y="180">• mosquitto: MQTT broker con autenticación</text>
+  <text class="legend-text" id="svg_66" x="770" y="195">• influxdb: Base de datos de series temporales</text>
+  <text class="legend-text" id="svg_67" x="770" y="210">• telegraf: Recolector y procesador de datos</text>
+  <text class="legend-text" id="svg_68" x="770" y="225">• grafana: Dashboard web de visualización</text>
+  <text class="legend-text" id="svg_69" x="770" y="240">• api: Servidor REST API con FastAPI</text>
+  <text class="legend-text" font-weight="bold" id="svg_70" x="760" y="265">Puertos Expuestos:</text>
+  <text class="legend-text" id="svg_71" x="770" y="280">• 1883: MQTT Broker (Mosquitto)</text>
+  <text class="legend-text" id="svg_72" x="770" y="295">• 8086: InfluxDB HTTP API</text>
+  <text class="legend-text" id="svg_73" x="770" y="310">• 3000: Grafana Web UI</text>
+  <text class="legend-text" id="svg_74" x="770" y="325">• 8000: FastAPI REST Endpoints</text>
+  <text class="legend-text" font-weight="bold" id="svg_75" x="760" y="350">Autenticación:</text>
+  <text class="legend-text" id="svg_76" x="770" y="365">• Usuario: admin</text>
+  <text class="legend-text" id="svg_77" x="770" y="380">• Contraseña: admin12345</text>
+  <text class="legend-text" id="svg_78" x="770" y="395">• Token InfluxDB: my-super-secret-token</text>
+  <text class="legend-text" id="svg_79" x="770" y="410">• Organización: microgrid, Bucket: telemetry</text>
+  <rect fill="#f8f9fa" height="280" id="svg_80" rx="4" stroke="#dee2e6" width="400" x="750" y="450"/>
+  <text class="legend-text" font-weight="bold" id="svg_81" x="760" y="470">Características del Sistema:</text>
+  <text class="legend-text" font-weight="bold" id="svg_82" x="760" y="495">ESP32 (Dispositivo físico):</text>
+  <text class="legend-text" id="svg_83" x="770" y="510">• Conexión WiFi para comunicación MQTT</text>
+  <text class="legend-text" id="svg_84" x="770" y="525">• Sensores de voltaje, corriente y temperatura</text>
+  <text class="legend-text" id="svg_85" x="770" y="540">• Firmware en C++ con PlatformIO</text>
+  <text class="legend-text" id="svg_86" x="770" y="555">• Configuración remota vía MQTT</text>
+  <text class="legend-text" font-weight="bold" id="svg_87" x="760" y="580">Aplicación Flutter:</text>
+  <text class="legend-text" id="svg_88" x="770" y="595">• Multiplataforma (Android/iOS)</text>
+  <text class="legend-text" id="svg_89" x="770" y="610">• Conexión a REST API para datos en tiempo real</text>
+  <text class="legend-text" id="svg_90" x="770" y="625">• Gráficos y visualización de telemetría</text>
+  <text class="legend-text" id="svg_91" x="770" y="640">• Control remoto de dispositivos</text>
+  <text class="legend-text" font-weight="bold" id="svg_92" x="760" y="665">Monitoreo y Alertas:</text>
+  <text class="legend-text" id="svg_93" x="770" y="680">• Dashboards personalizables en Grafana</text>
+  <text class="legend-text" id="svg_94" x="770" y="695">• Alertas por umbrales configurables</text>
+  <text class="legend-text" id="svg_95" x="770" y="710">• Retención de datos históricos</text>
+  <line class="data-flow" id="svg_96" transform="matrix(1 0 0 1 0 0)" x1="132" x2="152" y1="199" y2="269"/>
+  <line class="data-flow" id="svg_97" transform="matrix(1 0 0 1 0 0)" x1="261" x2="219" y1="201" y2="271"/>
+  <line class="data-flow" id="svg_98" transform="matrix(1 0 0 1 0 0)" x1="165" x2="145" y1="350" y2="420"/>
+  <line class="data-flow" id="svg_99" transform="matrix(1 0 0 1 0 0)" x1="134" x2="154" y1="500" y2="570"/>
+  <line class="data-flow" id="svg_100" x1="240" x2="250" y1="350" y2="420"/>
+  <line class="data-flow" id="svg_101" transform="matrix(1 0 0 1 0 0)" x1="152" x2="122" y1="650" y2="720"/>
+  <line class="data-flow" id="svg_102" transform="matrix(1 0 0 1 0 0)" x1="253" x2="253" y1="501" y2="725"/>
+  <text class="subtitle" font-weight="bold" id="svg_103" x="400" y="370">Leyenda de Componentes</text>
+  <rect class="device-box" height="15" id="svg_104" width="15" x="400" y="380"/>
+  <text class="legend-text" id="svg_105" transform="matrix(1 0 0 1 0 0)" x="425" y="392">Dispositivos IoT</text>
+  <rect class="mqtt-box" height="15" id="svg_106" width="15" x="400" y="405"/>
+  <text class="legend-text" id="svg_107" x="425" y="417">Comunicación MQTT</text>
+  <rect class="service-box" height="15" id="svg_108" width="15" x="400" y="430"/>
+  <text class="legend-text" id="svg_109" x="425" y="442">Servicios de Procesamiento</text>
+  <rect class="api-box" height="15" id="svg_110" width="15" x="400" y="455"/>
+  <text class="legend-text" id="svg_111" x="425" y="467">APIs y Servicios Web</text>
+  <rect class="storage-box" height="15" id="svg_112" width="15" x="400" y="480"/>
+  <text class="legend-text" id="svg_113" x="425" y="492">Almacenamiento de Datos</text>
+  <rect class="ui-box" height="15" id="svg_114" width="15" x="400" y="505"/>
+  <text class="legend-text" id="svg_115" x="425" y="517">Interfaces de Usuario</text>
+  <line class="data-flow" id="svg_116" x1="400" x2="420" y1="535" y2="535"/>
+  <text class="legend-text" id="svg_117" x="425" y="540">Flujo de Datos</text>
+  <text class="legend-text" font-style="italic" id="svg_118" text-anchor="middle" x="600" y="780">Sistema IoT para Monitoreo de Microgrid - Arquitectura Completa con ESP32, MQTT, InfluxDB, Grafana y Flutter</text>
+ </g>
+</svg>
