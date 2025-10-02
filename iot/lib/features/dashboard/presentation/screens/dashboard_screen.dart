@@ -229,7 +229,7 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...rooms.expand((room) => _getActiveDevicesForRoom(room)).toList(),
+          ...rooms.expand((room) => _getActiveDevicesForRoom(room)),
         ],
       ),
     );

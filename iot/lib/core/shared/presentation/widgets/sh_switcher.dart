@@ -32,8 +32,8 @@ class SHSwitcher extends StatelessWidget {
             const SizedBox(width: 8),
           ],
           CupertinoSwitch(
-            trackColor: SHColors.trackColor,
-            activeColor: SHColors.trackColor,
+            inactiveTrackColor: SHColors.trackColor,
+            activeTrackColor: SHColors.trackColor,
             thumbColor: value ? null : Colors.white60,
             value: value,
             onChanged: onChanged,

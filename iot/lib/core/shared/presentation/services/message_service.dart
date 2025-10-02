@@ -82,7 +82,7 @@ class MessageService {
             const Icon(Icons.thermostat, color: Colors.white, size: 20),
             const SizedBox(width: 8),
             Text(
-              'Temperatura ajustada a ${temperature}°C',
+              'Temperatura ajustada a $temperature°C',
               style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
             ),
           ],
