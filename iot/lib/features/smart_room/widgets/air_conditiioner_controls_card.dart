@@ -143,7 +143,7 @@ class _AirSwitcher extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${selectedTemp}°C',
+                '$selectedTemp°C',
                 style: const TextStyle(fontSize: 32, color: Colors.white),
               ),
               Slider(

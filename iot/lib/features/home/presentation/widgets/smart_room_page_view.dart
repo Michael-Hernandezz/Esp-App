@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/shared/domain/entities/smart_room.dart';
 import '../../../../core/shared/presentation/widgets/room_card.dart';
 import '../../../../core/core.dart';
 import '../../../smart_room/screens/room_details_screen.dart';

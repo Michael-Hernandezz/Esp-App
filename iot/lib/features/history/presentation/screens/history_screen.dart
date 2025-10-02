@@ -143,7 +143,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           const SizedBox(height: 16),
           ..._deviceActivities
               .map((activity) => _buildActivityCard(activity))
-              .toList(),
+              ,
         ],
       ),
     );
@@ -342,7 +342,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           const SizedBox(height: 16),
           ..._energyHistory
               .map((consumption) => _buildEnergyCard(consumption))
-              .toList(),
+              ,
         ],
       ),
     );
@@ -383,7 +383,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      '${consumption.totalConsumption.toStringAsFixed(1)}',
+                      consumption.totalConsumption.toStringAsFixed(1),
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 10,

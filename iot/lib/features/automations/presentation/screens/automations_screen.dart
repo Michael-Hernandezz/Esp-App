@@ -82,13 +82,13 @@ class _AutomationsScreenState extends State<AutomationsScreen> {
           children: [
             _buildSectionTitle('Temporizadores Activos'),
             const SizedBox(height: 16),
-            ..._timers.map((timer) => _buildTimerCard(timer)).toList(),
+            ..._timers.map((timer) => _buildTimerCard(timer)),
             const SizedBox(height: 32),
             _buildSectionTitle('Reglas de Automatización'),
             const SizedBox(height: 16),
             ..._automations
                 .map((automation) => _buildAutomationCard(automation))
-                .toList(),
+                ,
           ],
         ),
       ),
@@ -260,7 +260,7 @@ class _AutomationsScreenState extends State<AutomationsScreen> {
               Switch(
                 value: automation.isActive,
                 onChanged: (value) => _toggleAutomation(automation.id, value),
-                activeColor: SHColors.selectedColor,
+                activeThumbColor: SHColors.selectedColor,
               ),
             ],
           ),

@@ -125,7 +125,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         const SizedBox(height: 16),
         ..._securityDevices
             .map((device) => _buildSecurityDeviceCard(device))
-            .toList(),
+            ,
       ],
     );
   }
@@ -320,7 +320,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         const SizedBox(height: 16),
         ..._notifications
             .map((notification) => _buildNotificationCard(notification))
-            .toList(),
+            ,
       ],
     );
   }
