@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
-import 'package:iot/core/shared/presentation/widgets/smart_home_drawer.dart';
 
 class AutomationsScreen extends StatefulWidget {
   const AutomationsScreen({super.key});

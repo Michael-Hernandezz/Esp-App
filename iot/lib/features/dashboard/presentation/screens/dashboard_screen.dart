@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
-import 'package:iot/core/shared/presentation/widgets/smart_home_drawer.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -8,7 +7,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final roomStateNotifier = RoomStateProvider.of(context);
-
+    
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
       appBar: AppBar(
