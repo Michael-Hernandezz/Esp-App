@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
-import 'package:iot/core/shared/presentation/widgets/smart_home_drawer.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -44,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Switch(
                   value: true,
                   onChanged: (value) {},
-                  activeColor: SHColors.selectedColor,
+                  activeThumbColor: SHColors.selectedColor,
                 ),
               ),
             ]),
@@ -59,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Switch(
                   value: true,
                   onChanged: (value) {},
-                  activeColor: SHColors.selectedColor,
+                  activeThumbColor: SHColors.selectedColor,
                 ),
               ),
               _buildSettingItem(
@@ -70,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Switch(
                   value: false,
                   onChanged: (value) {},
-                  activeColor: SHColors.selectedColor,
+                  activeThumbColor: SHColors.selectedColor,
                 ),
               ),
               _buildSettingItem(
@@ -99,7 +98,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Switch(
                   value: true,
                   onChanged: (value) {},
-                  activeColor: SHColors.selectedColor,
+                  activeThumbColor: SHColors.selectedColor,
                 ),
               ),
               _buildSettingItem(
@@ -110,7 +109,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Switch(
                   value: false,
                   onChanged: (value) {},
-                  activeColor: SHColors.selectedColor,
+                  activeThumbColor: SHColors.selectedColor,
                 ),
               ),
             ]),

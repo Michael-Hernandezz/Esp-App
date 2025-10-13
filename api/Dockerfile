@@ -4,7 +4,8 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN pip install --no-cache-dir fastapi uvicorn[standard] aiomqtt pydantic
+# Añadimos influxdb-client
+RUN pip install --no-cache-dir fastapi uvicorn[standard] aiomqtt pydantic influxdb-client
 
 COPY main.py /app/main.py
 COPY .env /app/.env
