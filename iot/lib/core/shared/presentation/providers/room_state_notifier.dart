@@ -2,9 +2,29 @@ import 'package:flutter/foundation.dart';
 import 'package:iot/core/shared/domain/entities/smart_room.dart';
 import 'package:iot/core/shared/domain/entities/smart_device.dart';
 import 'package:iot/core/shared/domain/entities/music_info.dart';
+import 'package:iot/core/shared/data/services/iot_data_service.dart';
 
 class RoomStateNotifier extends ValueNotifier<List<SmartRoom>> {
-  RoomStateNotifier() : super(SmartRoom.fakeValues);
+  RoomStateNotifier() : super([]) {
+    _loadRealData();
+  }
+
+  /// Carga datos reales de InfluxDB
+  Future<void> _loadRealData() async {
+    try {
+      final realData = await IoTDataService.getRealIoTData();
+      value = realData;
+      print('Datos IoT cargados: ${realData.length} habitaciones');
+    } catch (e) {
+      print('Error cargando datos IoT, usando datos de respaldo: $e');
+      value = SmartRoom.fakeValues;
+    }
+  }
+
+  /// Refresca los datos desde InfluxDB
+  Future<void> refreshData() async {
+    await _loadRealData();
+  }
 
   void updateMusicState(String roomId, bool isOn) {
     final updatedRooms = value.map((room) {
