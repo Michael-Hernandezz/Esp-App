@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
-import 'package:iot/features/dashboard/presentation/widgets/sensor_chart_widget.dart';
+import 'package:iot/features/dashboard/presentation/widgets/iot_advanced_chart_widget.dart';
+import 'package:iot/features/dashboard/presentation/widgets/iot_alerts_widget.dart';
 import 'package:iot/core/shared/data/services/iot_data_service.dart';
 
 class EnhancedDashboardScreen extends StatefulWidget {
@@ -70,6 +71,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSystemOverview(),
+              const SizedBox(height: 16),
+              const IoTAlertsWidget(),
               const SizedBox(height: 24),
               _buildSensorCharts(),
               const SizedBox(height: 24),
@@ -283,38 +286,64 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Datos de Sensores en Tiempo Real',
+          'Monitoreo IoT en Tiempo Real',
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        const SensorChartWidget(
+        IoTAdvancedChartWidget(
           measurement: 'temp',
-          title: 'Temperatura',
-          color: Colors.orange,
+          title: 'Temperatura Ambiente',
+          primaryColor: Colors.orange,
           unit: '°C',
+          deviceId: 'TEMP-001',
+          chartType: IoTChartType.line,
+          minThreshold: 15.0,
+          maxThreshold: 30.0,
+          showRealTimeIndicator: true,
         ),
-        const SizedBox(height: 16),
-        const SensorChartWidget(
+        const SizedBox(height: 24),
+        IoTAdvancedChartWidget(
           measurement: 'v',
-          title: 'Voltaje',
-          color: Colors.blue,
+          title: 'Voltaje del Sistema',
+          primaryColor: Colors.blue,
           unit: 'V',
+          deviceId: 'VOLT-001',
+          chartType: IoTChartType.line,
+          minThreshold: 11.0,
+          maxThreshold: 13.0,
+          showRealTimeIndicator: true,
         ),
-        const SizedBox(height: 16),
-        const SensorChartWidget(
-          measurement: 'i',
-          title: 'Corriente',
-          color: Colors.amber,
-          unit: 'A',
-        ),
-        const SizedBox(height: 16),
-        const SensorChartWidget(
-          measurement: 'p',
-          title: 'Presión',
-          color: Colors.purple,
-          unit: 'Pa',
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: IoTAdvancedChartWidget(
+                measurement: 'i',
+                title: 'Corriente',
+                primaryColor: Colors.amber,
+                unit: 'A',
+                deviceId: 'AMP-001',
+                chartType: IoTChartType.gauge,
+                maxThreshold: 5.0,
+                showRealTimeIndicator: true,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: IoTAdvancedChartWidget(
+                measurement: 'p',
+                title: 'Presión',
+                primaryColor: Colors.purple,
+                unit: 'kPa',
+                deviceId: 'PRES-001',
+                chartType: IoTChartType.gauge,
+                maxThreshold: 1000.0,
+                showRealTimeIndicator: true,
+              ),
+            ),
+          ],
         ),
       ],
     );
