@@ -41,7 +41,7 @@ def loop_publish(client):
     p = v * i
     temp = 35.0 + random.uniform(-1.0, 1.0)
     payload = {"v": round(v,3), "i": round(i,3), "p": round(p,3), "temp": round(temp,2),
-               "status": 1, "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+              "status": 1, "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     client.publish(TOPIC_TEL, json.dumps(payload), qos=1)
     time.sleep(REPORT_MS/1000.0)
 
