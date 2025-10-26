@@ -474,10 +474,12 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   getDotPainter: (spot, percent, barData, index) {
                     final quality = _data[index].quality;
                     Color dotColor = widget.primaryColor;
-                    if (quality == IoTDataQuality.critical)
+                    if (quality == IoTDataQuality.critical) {
                       dotColor = Colors.red;
-                    if (quality == IoTDataQuality.warning)
+                    }
+                    if (quality == IoTDataQuality.warning) {
                       dotColor = Colors.orange;
+                    }
 
                     return FlDotCirclePainter(
                       radius: 4,
@@ -608,7 +610,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '${currentValue.toStringAsFixed(1)}',
+                  currentValue.toStringAsFixed(1),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: widget.primaryColor,
