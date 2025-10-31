@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:iot/core/app/app.dart';
+import 'package:ui_common/ui_common.dart';
+import 'package:iot/core/core.dart';
+import 'features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,5 +15,23 @@ void main() async {
     print('Error cargando .env: $e');
   }
 
-  runApp(const SmartHomeApp());
+  runApp(const IoTMicrogridApp());
+}
+
+class IoTMicrogridApp extends StatelessWidget {
+  const IoTMicrogridApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'IoT Microgrid App',
+          theme: SHTheme.dark,
+          home: const SplashScreen(),
+        );
+      },
+    );
+  }
 }
