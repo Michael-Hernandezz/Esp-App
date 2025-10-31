@@ -114,6 +114,24 @@ class SettingsScreen extends StatelessWidget {
               ),
             ]),
             const SizedBox(height: 24),
+            _buildSectionTitle(context, 'Sesión'),
+            _buildSettingsCard(context, [
+              _buildSettingItem(
+                context,
+                icon: Icons.account_circle,
+                title: 'Datos de sesión',
+                subtitle: 'Ver información almacenada',
+                onTap: () => _navigateToEvidence(context),
+              ),
+              _buildSettingItem(
+                context,
+                icon: Icons.logout,
+                title: 'Cerrar sesión',
+                subtitle: 'Salir de la aplicación',
+                onTap: () => _showLogoutDialog(context),
+              ),
+            ]),
+            const SizedBox(height: 24),
             _buildSectionTitle(context, 'Información'),
             _buildSettingsCard(context, [
               _buildSettingItem(
@@ -515,6 +533,10 @@ class SettingsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _navigateToEvidence(BuildContext context) {
+    Navigator.pushNamed(context, '/evidence');
   }
 
   void _showLogoutDialog(BuildContext context) {
