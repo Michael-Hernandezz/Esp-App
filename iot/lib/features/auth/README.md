@@ -1,6 +1,6 @@
 # Sistema de Autenticación IoT Microgrid
 
-## 🚀 Cómo Acceder a la Aplicación
+## Cómo Acceder a la Aplicación
 
 Para iniciar sesión en la aplicación, usa las siguientes credenciales:
 
@@ -8,7 +8,7 @@ Para iniciar sesión en la aplicación, usa las siguientes credenciales:
 - **Device ID**: `dev-001`
 - **InfluxDB Token**: `m9dZ53tgCda7obiBCJn4xFVloD8q9zbqckGPvMzlPxJ3Jwb2ur6gGp-sgWD-KjHH5tvJIqgCSvpuVKeOHj66rw==`
 
-### 🟡 Modo Demo (Sin infraestructura)
+### Modo Demo (Sin infraestructura)
 Si no tienes InfluxDB funcionando, puedes usar estas credenciales de demo:
 - **Device ID**: `dev-001` 
 - **InfluxDB Token**: `demo123`
@@ -21,7 +21,7 @@ Si no tienes InfluxDB funcionando, puedes usar estas credenciales de demo:
    - **Device ID**: `dev-001`
    - **InfluxDB Token**: Copia y pega el token de arriba
 3. Presiona "Iniciar Sesión"
-4. ¡Listo! Ya puedes acceder a todas las funcionalidades
+
 
 ---
 
