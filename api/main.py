@@ -58,7 +58,8 @@ def _query_influx(flux: str):
 @app.get("/telemetry")
 def get_telemetry(
     device_id: str = Query(..., description="dev-001"),
-    field: str = Query(..., pattern="^(v|i|p|temp)$", description="v|i|p|temp"),
+    field: str = Query(..., pattern="^(v_bat_conv|v_out_conv|v_cell1|v_cell2|v_cell3|i_circuit|soc_percent|soh_percent|alert|chg_enable|dsg_enable|cp_enable|pmon_enable)$", 
+                        description="v_bat_conv|v_out_conv|v_cell1|v_cell2|v_cell3|i_circuit|soc_percent|soh_percent|alert|chg_enable|dsg_enable|cp_enable|pmon_enable"),
     start: str = Query("-15m", description="p.ej. -15m, -2h, 2025-01-01T00:00:00Z"),
     stop: str = Query("now()", description="p.ej. now() o ISO"),
     bucket: str | None = Query(None, description="por defecto INFLUX_BUCKET"),
@@ -88,7 +89,8 @@ from(bucket: "{use_bucket}")
 @app.get("/telemetry/multi")
 def get_telemetry_multi(
     device_id: str = Query(...),
-    fields: str = Query("v,i,p,temp", description="coma-separado: v,i,p,temp"),
+    fields: str = Query("v_bat_conv,v_out_conv,v_cell1,v_cell2,v_cell3,i_circuit,soc_percent,soh_percent,alert,chg_enable,dsg_enable,cp_enable,pmon_enable", 
+                       description="coma-separado: v_bat_conv,v_out_conv,v_cell1,v_cell2,v_cell3,i_circuit,soc_percent,soh_percent,alert,chg_enable,dsg_enable,cp_enable,pmon_enable"),
     start: str = Query("-15m"),
     stop: str = Query("now()"),
     bucket: str | None = Query(None),
@@ -98,11 +100,14 @@ def get_telemetry_multi(
     use_bucket = bucket or INFLUX_BUCKET
     wanted = [f.strip() for f in fields.split(",") if f.strip()]
 
+    # Formatear la lista para Flux
+    wanted_set = '[' + ', '.join([f'"{w}"' for w in wanted]) + ']'
+    
     flux = f'''
 data = from(bucket: "{use_bucket}")
   |> range(start: {start}, stop: {stop})
   |> filter(fn: (r) => r._measurement == "telemetry" and r.device_id == "{device_id}")
-  |> filter(fn: (r) => contains(value: r._field, set: {wanted}))
+  |> filter(fn: (r) => contains(value: r._field, set: {wanted_set}))
 '''
     if window:
         flux += f'  |> aggregateWindow(every: {window}, fn: {agg or "mean"}, createEmpty: false)\n'
@@ -120,3 +125,60 @@ data = from(bucket: "{use_bucket}")
                 series[field].append({"time": t.isoformat(), "epochMs": int(t.timestamp()*1000), "value": float(v)})
 
     return {"device_id": device_id, "bucket": use_bucket, "start": start, "stop": stop, "series": series}
+
+# ========== CONTROL DE ACTUADORES ==========
+
+class ActuatorCommand(BaseModel):
+    device_id: str
+    chg_enable: int | None = None    # 0 o 1
+    dsg_enable: int | None = None    # 0 o 1  
+    cp_enable: int | None = None     # 0 o 1
+    pmon_enable: int | None = None   # 0 o 1
+
+@app.post("/actuators/control")
+async def control_actuators(cmd: ActuatorCommand):
+    """Controla los actuadores del sistema BMS"""
+    topic = f"{MQTT_BASE}/{cmd.device_id}/cmd"
+    
+    # Solo envía campos que no sean None
+    payload = {}
+    if cmd.chg_enable is not None:
+        payload["chg_enable"] = cmd.chg_enable
+    if cmd.dsg_enable is not None:
+        payload["dsg_enable"] = cmd.dsg_enable
+    if cmd.cp_enable is not None:
+        payload["cp_enable"] = cmd.cp_enable
+    if cmd.pmon_enable is not None:
+        payload["pmon_enable"] = cmd.pmon_enable
+    
+    if not payload:
+        raise HTTPException(400, "Al menos un actuador debe especificarse")
+    
+    async with aiomqtt.Client(MQTT_HOST, port=MQTT_PORT, username=MQTT_USER, password=MQTT_PASS) as client:
+        await client.publish(topic, json.dumps(payload).encode(), qos=1, retain=False)
+    
+    return {"published": True, "topic": topic, "payload": payload}
+
+@app.get("/actuators/status/{device_id}")
+def get_actuator_status(device_id: str):
+    """Obtiene el estado actual de todos los actuadores"""
+    try:
+        flux = f'''
+from(bucket: "{INFLUX_BUCKET}")
+  |> range(start: -5m)
+  |> filter(fn: (r) => r._measurement == "telemetry" and r.device_id == "{device_id}")
+  |> filter(fn: (r) => contains(value: r._field, set: ["chg_enable", "dsg_enable", "cp_enable", "pmon_enable"]))
+  |> last()
+  |> keep(columns: ["_time","_value","_field"])
+'''
+        tables = _query_influx(flux)
+        status = {}
+        for table in tables:
+            for rec in table.records:
+                field = rec.values.get("_field")
+                value = int(rec.get_value())
+                status[field] = value
+        
+        return {"device_id": device_id, "actuators": status}
+    except Exception as e:
+        raise HTTPException(500, f"Error obteniendo estado de actuadores: {e}")

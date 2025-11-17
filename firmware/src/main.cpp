@@ -41,13 +41,26 @@ struct State {
   float setpoint_i = 5.0;
   bool enable = true;
   uint32_t period = 1000;
+  
+  // Estados de actuadores BMS
+  bool chg_enable = false;
+  bool dsg_enable = false;
+  bool cp_enable = false;
+  bool pmon_enable = true;
 } state;
 
 unsigned long lastT = 0;
 
-float readVoltage() { return state.setpoint_v + (random(-5, 5) / 100.0); }
-float readCurrent() { return state.enable ? state.setpoint_i * 0.9 : 0.0; }
-float readTemp() { return 35.0 + (random(-10, 10) / 10.0); }
+// Simulación de lecturas BMS
+float readVBatConv() { return 24.0 + (random(-10, 10) / 100.0); }
+float readVOutConv() { return 12.0 + (random(-5, 5) / 100.0); }
+float readVCell1() { return 3.7 + (random(-2, 2) / 100.0); }
+float readVCell2() { return 3.6 + (random(-2, 2) / 100.0); }
+float readVCell3() { return 3.8 + (random(-2, 2) / 100.0); }
+float readICurrent() { return state.enable ? 2.5 + (random(-10, 10) / 100.0) : 0.0; }
+float readSOC() { return 75.0 + (random(-5, 5) / 10.0); }
+float readSOH() { return 95.0 + (random(-2, 2) / 10.0); }
+int readAlert() { return random(0, 100) > 95 ? 1 : 0; }
 
 void publishStatus(bool online) {
   StaticJsonDocument<128> doc;
@@ -60,9 +73,28 @@ void onMsg(char* topic, char* payload, AsyncMqttClientMessageProperties properti
   StaticJsonDocument<256> doc;
   if (deserializeJson(doc, payload, len)) return;
   if (String(topic) == topicCmd) {
+    // Comandos legacy
     if (doc.containsKey("setpoint_v")) state.setpoint_v = doc["setpoint_v"].as<float>();
     if (doc.containsKey("setpoint_i")) state.setpoint_i = doc["setpoint_i"].as<float>();
     if (doc.containsKey("enable")) state.enable = doc["enable"].as<bool>();
+    
+    // Comandos de actuadores BMS
+    if (doc.containsKey("chg_enable")) {
+      state.chg_enable = doc["chg_enable"].as<int>() == 1;
+      Serial.println("CHG Enable: " + String(state.chg_enable));
+    }
+    if (doc.containsKey("dsg_enable")) {
+      state.dsg_enable = doc["dsg_enable"].as<int>() == 1;
+      Serial.println("DSG Enable: " + String(state.dsg_enable));
+    }
+    if (doc.containsKey("cp_enable")) {
+      state.cp_enable = doc["cp_enable"].as<int>() == 1;
+      Serial.println("CP Enable: " + String(state.cp_enable));
+    }
+    if (doc.containsKey("pmon_enable")) {
+      state.pmon_enable = doc["pmon_enable"].as<int>() == 1;
+      Serial.println("PMON Enable: " + String(state.pmon_enable));
+    }
   } else if (String(topic) == topicCfg) {
     if (doc.containsKey("report_period_ms")) state.period = doc["report_period_ms"].as<uint32_t>();
   }
@@ -99,14 +131,43 @@ void loop() {
   unsigned long now = millis();
   if (now - lastT >= state.period) {
     lastT = now;
-    float v = readVoltage(), i = readCurrent(), p = v * i, temp = readTemp();
-    StaticJsonDocument<256> doc;
-    doc["v"] = v; doc["i"] = i; doc["p"] = p; doc["temp"] = temp;
+    
+    // Leer todas las variables del BMS
+    float vBatConv = readVBatConv();
+    float vOutConv = readVOutConv();
+    float vCell1 = readVCell1();
+    float vCell2 = readVCell2();
+    float vCell3 = readVCell3();
+    float iCircuit = readICurrent();
+    float socPercent = readSOC();
+    float sohPercent = readSOH();
+    int alert = readAlert();
+    
+    StaticJsonDocument<512> doc;
+    
+    // Variables del sistema BMS
+    doc["v_bat_conv"] = vBatConv;
+    doc["v_out_conv"] = vOutConv;
+    doc["v_cell1"] = vCell1;
+    doc["v_cell2"] = vCell2;
+    doc["v_cell3"] = vCell3;
+    doc["i_circuit"] = iCircuit;
+    doc["soc_percent"] = socPercent;
+    doc["soh_percent"] = sohPercent;
+    doc["alert"] = alert;
+    
+    // Estados de actuadores
+    doc["chg_enable"] = state.chg_enable ? 1 : 0;
+    doc["dsg_enable"] = state.dsg_enable ? 1 : 0;
+    doc["cp_enable"] = state.cp_enable ? 1 : 0;
+    doc["pmon_enable"] = state.pmon_enable ? 1 : 0;
+    
     doc["status"] = "ok";
     String ts;
     time_t epoch = timeClient.getEpochTime(); struct tm* t = gmtime(&epoch);
     char buf[32]; strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", t); ts = buf;
     doc["timestamp"] = ts;
+    
     String s; serializeJson(doc, s);
     mqtt.publish(topicTel.c_str(), 1, false, s.c_str(), s.length());
   }

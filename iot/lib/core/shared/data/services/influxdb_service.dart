@@ -69,8 +69,24 @@ from(bucket: "$_bucket")
   /// Obtiene últimos valores de sensores para el dashboard
   static Future<Map<String, SensorReading>> getLatestSensorData() async {
     try {
-      // Solo obtener los datos reales que envía tu dispositivo IoT
-      final measurements = ['temp', 'v', 'i', 'p', 'status'];
+      // Nuevas variables del sistema BMS
+      final measurements = [
+        'v_bat_conv', // Voltaje de batería (convertidor)
+        'v_out_conv', // Voltaje de salida (convertidor)
+        'v_cell1', // Voltaje celda 1
+        'v_cell2', // Voltaje celda 2
+        'v_cell3', // Voltaje celda 3
+        'i_circuit', // Corriente del circuito
+        'soc_percent', // Estado de carga (%)
+        'soh_percent', // Salud de la batería (%)
+        'alert', // Alerta (1/0)
+        'chg_enable', // CHG enable (1/0)
+        'dsg_enable', // DSG enable (1/0)
+        'cp_enable', // CP enable (1/0)
+        'pmon_enable', // PMON enable (1/0)
+        'status', // Estado general
+      ];
+
       final Map<String, SensorReading> latestData = {};
 
       for (final measurement in measurements) {
@@ -144,7 +160,7 @@ from(bucket: "$_bucket")
               : 'unknown';
 
           final numericValue = double.tryParse(rawValue) ?? 0.0;
-          final textValue = null; 
+          final textValue = null;
 
           final reading = SensorReading(
             timestamp: timeIndex >= 0 && timeIndex < values.length
@@ -171,11 +187,11 @@ from(bucket: "$_bucket")
   }
 }
 
-/// Modelo 
+/// Modelo
 class SensorReading {
   final DateTime timestamp;
   final double value;
-  final String? textValue; 
+  final String? textValue;
   final String measurement;
   final String deviceId;
 

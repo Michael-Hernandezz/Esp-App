@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
 import 'package:iot/features/dashboard/presentation/widgets/iot_advanced_chart_widget.dart';
 import 'package:iot/features/dashboard/presentation/widgets/iot_alerts_widget.dart';
+import 'package:iot/features/dashboard/presentation/widgets/bms_data_widget.dart';
+import 'package:iot/features/dashboard/presentation/widgets/bms_control_widget.dart';
 import 'package:iot/core/shared/data/services/iot_data_service.dart';
+import 'package:iot/core/shared/domain/entities/iot_sensor_data.dart';
 
 class EnhancedDashboardScreen extends StatefulWidget {
   const EnhancedDashboardScreen({super.key});
@@ -14,6 +17,7 @@ class EnhancedDashboardScreen extends StatefulWidget {
 
 class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Map<String, dynamic> _systemStats = {};
+  List<SmartRoom> _iotRooms = [];
   bool _isLoading = true;
 
   @override
@@ -25,8 +29,10 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Future<void> _loadSystemStats() async {
     try {
       final stats = await IoTDataService.getSystemStats();
+      final iotRooms = await IoTDataService.getRealIoTData();
       setState(() {
         _systemStats = stats;
+        _iotRooms = iotRooms;
         _isLoading = false;
       });
     } catch (e) {
@@ -73,6 +79,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
               _buildSystemOverview(),
               const SizedBox(height: 16),
               const IoTAlertsWidget(),
+              const SizedBox(height: 24),
+              _buildBMSSection(),
               const SizedBox(height: 24),
               _buildSensorCharts(),
               const SizedBox(height: 24),
@@ -133,17 +141,17 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
               children: [
                 Expanded(
                   child: _buildStatCard(
-                    'Temperatura',
-                    '${(_systemStats['avg_temperature'] ?? 0.0).toStringAsFixed(1)}°C',
-                    Icons.thermostat,
-                    Colors.orange,
+                    'V. Batería',
+                    '${(_systemStats['avg_battery_voltage'] ?? 0.0).toStringAsFixed(1)}V',
+                    Icons.battery_full,
+                    Colors.green,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatCard(
-                    'Voltaje',
-                    '${(_systemStats['avg_voltage'] ?? 0.0).toStringAsFixed(1)}V',
+                    'V. Salida',
+                    '${(_systemStats['avg_output_voltage'] ?? 0.0).toStringAsFixed(1)}V',
                     Icons.electrical_services,
                     Colors.blue,
                   ),
@@ -164,11 +172,28 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatCard(
-                    'Presión',
-                    '${(_systemStats['avg_pressure'] ?? 0.0).toStringAsFixed(1)}Pa',
-                    Icons.compress,
+                    'Estado Carga',
+                    '${(_systemStats['avg_soc'] ?? 0.0).toStringAsFixed(1)}%',
+                    Icons.battery_charging_full,
+                    Colors.cyan,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Salud Batería',
+                    '${(_systemStats['avg_soh'] ?? 0.0).toStringAsFixed(1)}%',
+                    Icons.health_and_safety,
                     Colors.purple,
                   ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Container(), // Espacio vacío para balance
                 ),
               ],
             ),
@@ -281,6 +306,73 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
     }
   }
 
+  Widget _buildBMSSection() {
+    if (_iotRooms.isEmpty) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Icon(Icons.battery_unknown, size: 48, color: Colors.grey[400]),
+              const SizedBox(height: 8),
+              Text(
+                'Sistema BMS No Conectado',
+                style: TextStyle(color: Colors.grey[400], fontSize: 16),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Verifica la conexión del dispositivo',
+                style: TextStyle(color: Colors.grey[500], fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Usar el primer dispositivo IoT encontrado
+    final firstDevice = _iotRooms.first;
+    final sensorData = IoTSensorData(
+      deviceId: firstDevice.id,
+      roomName: firstDevice.name,
+      vBatConv: firstDevice.temperature, // Mapeo temporal
+      vOutConv: 12.0, // Valor por defecto
+      vCell1: 3.7, // Valores simulados
+      vCell2: 3.6,
+      vCell3: 3.8,
+      iCircuit: 2.5,
+      socPercent: 75.0,
+      sohPercent: 95.0,
+      alert: 0,
+      chgEnable: 1,
+      dsgEnable: 1,
+      cpEnable: 0,
+      pmonEnable: 1,
+      status: 'ok',
+      lastUpdated: DateTime.now(),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sistema de Gestión de Batería (BMS)',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 16),
+        BMSDataWidget(sensorData: sensorData, onRefresh: _loadSystemStats),
+        const SizedBox(height: 16),
+        BMSControlWidget(
+          deviceId: firstDevice.id,
+          onStateChanged: _loadSystemStats,
+        ),
+      ],
+    );
+  }
+
   Widget _buildSensorCharts() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,23 +385,23 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         ),
         const SizedBox(height: 16),
         IoTAdvancedChartWidget(
-          measurement: 'temp',
-          title: 'Temperatura Ambiente',
-          primaryColor: Colors.orange,
-          unit: '°C',
-          deviceId: 'TEMP-001',
+          measurement: 'v_bat_conv',
+          title: 'Voltaje de Batería (Convertidor)',
+          primaryColor: Colors.green,
+          unit: 'V',
+          deviceId: 'dev-001',
           chartType: IoTChartType.line,
-          minThreshold: 15.0,
-          maxThreshold: 30.0,
+          minThreshold: 22.0,
+          maxThreshold: 26.0,
           showRealTimeIndicator: true,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
-          measurement: 'v',
-          title: 'Voltaje del Sistema',
+          measurement: 'v_out_conv',
+          title: 'Voltaje de Salida (Convertidor)',
           primaryColor: Colors.blue,
           unit: 'V',
-          deviceId: 'VOLT-001',
+          deviceId: 'dev-001',
           chartType: IoTChartType.line,
           minThreshold: 11.0,
           maxThreshold: 13.0,
@@ -317,24 +409,37 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
-          measurement: 'i',
-          title: 'Corriente',
+          measurement: 'i_circuit',
+          title: 'Corriente del Circuito',
           primaryColor: Colors.amber,
           unit: 'A',
-          deviceId: 'AMP-001',
+          deviceId: 'dev-001',
           chartType: IoTChartType.line,
           maxThreshold: 5.0,
           showRealTimeIndicator: true,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
-          measurement: 'p',
-          title: 'Presión',
-          primaryColor: Colors.purple,
-          unit: 'kPa',
-          deviceId: 'PRES-001',
+          measurement: 'soc_percent',
+          title: 'Estado de Carga (SOC)',
+          primaryColor: Colors.cyan,
+          unit: '%',
+          deviceId: 'dev-001',
           chartType: IoTChartType.line,
-          maxThreshold: 1000.0,
+          minThreshold: 20.0,
+          maxThreshold: 100.0,
+          showRealTimeIndicator: true,
+        ),
+        const SizedBox(height: 24),
+        IoTAdvancedChartWidget(
+          measurement: 'soh_percent',
+          title: 'Salud de la Batería (SOH)',
+          primaryColor: Colors.purple,
+          unit: '%',
+          deviceId: 'dev-001',
+          chartType: IoTChartType.line,
+          minThreshold: 80.0,
+          maxThreshold: 100.0,
           showRealTimeIndicator: true,
         ),
       ],

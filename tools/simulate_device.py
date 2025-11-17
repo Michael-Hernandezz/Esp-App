@@ -15,7 +15,11 @@ TOPIC_CMD = f"{BASE}/{DEVICE_ID}/cmd"
 TOPIC_CFG = f"{BASE}/{DEVICE_ID}/cfg"
 TOPIC_STATUS = f"{BASE}/{DEVICE_ID}/status"
 
-state = {"setpoint_v": 24.0, "setpoint_i": 5.0, "enable": True}
+state = {
+  "setpoint_v": 24.0, "setpoint_i": 5.0, "enable": True,
+  "chg_enable": False, "dsg_enable": False, 
+  "cp_enable": False, "pmon_enable": True
+}
 
 def on_connect(client, userdata, flags, rc, properties=None):
   print("Connected:", rc)
@@ -26,8 +30,14 @@ def on_message(client, userdata, msg):
   try: data = json.loads(msg.payload.decode())
   except: print("Invalid JSON on", msg.topic); return
   if msg.topic == TOPIC_CMD:
+    # Comandos legacy
     for k in ["setpoint_v", "setpoint_i", "enable"]:
       if k in data: state[k] = data[k]
+    # Comandos de actuadores
+    for k in ["chg_enable", "dsg_enable", "cp_enable", "pmon_enable"]:
+      if k in data: 
+        state[k] = bool(data[k])
+        print(f"Actuator {k}: {state[k]}")
     print("CMD:", data)
   elif msg.topic == TOPIC_CFG:
     global REPORT_MS
@@ -36,12 +46,34 @@ def on_message(client, userdata, msg):
 
 def loop_publish(client):
   while True:
-    v = float(state["setpoint_v"]) + random.uniform(-0.05, 0.05)
-    i = (float(state["setpoint_i"]) * 0.9 if state["enable"] else 0.0) + random.uniform(-0.02, 0.02)
-    p = v * i
-    temp = 35.0 + random.uniform(-1.0, 1.0)
-    payload = {"v": round(v,3), "i": round(i,3), "p": round(p,3), "temp": round(temp,2),
-              "status": 1, "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+    # Simular variables del BMS
+    v_bat_conv = 24.0 + random.uniform(-0.1, 0.1)
+    v_out_conv = 12.0 + random.uniform(-0.05, 0.05)
+    v_cell1 = 3.7 + random.uniform(-0.02, 0.02)
+    v_cell2 = 3.6 + random.uniform(-0.02, 0.02)
+    v_cell3 = 3.8 + random.uniform(-0.02, 0.02)
+    i_circuit = (2.5 if state["enable"] else 0.1) + random.uniform(-0.02, 0.02)
+    soc_percent = 75.0 + random.uniform(-0.5, 0.5)
+    soh_percent = 95.0 + random.uniform(-0.2, 0.2)
+    alert = 1 if random.random() > 0.98 else 0
+    
+    payload = {
+      "v_bat_conv": round(v_bat_conv, 3),
+      "v_out_conv": round(v_out_conv, 3),
+      "v_cell1": round(v_cell1, 3),
+      "v_cell2": round(v_cell2, 3),
+      "v_cell3": round(v_cell3, 3),
+      "i_circuit": round(i_circuit, 3),
+      "soc_percent": round(soc_percent, 1),
+      "soh_percent": round(soh_percent, 1),
+      "alert": alert,
+      "chg_enable": 1 if state["chg_enable"] else 0,
+      "dsg_enable": 1 if state["dsg_enable"] else 0,
+      "cp_enable": 1 if state["cp_enable"] else 0,
+      "pmon_enable": 1 if state["pmon_enable"] else 0,
+      "status": "ok",
+      "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
     client.publish(TOPIC_TEL, json.dumps(payload), qos=1)
     time.sleep(REPORT_MS/1000.0)
 

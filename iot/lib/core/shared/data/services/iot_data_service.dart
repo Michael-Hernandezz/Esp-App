@@ -42,15 +42,20 @@ class IoTDataService {
             id: deviceId,
             name: sensorData.roomName,
             imageUrl: 'assets/images/0.jpeg', // Imagen por defecto
-            temperature: sensorData.temperature ?? 20.0,
+            temperature:
+                sensorData.vBatConv ??
+                20.0, // Usar voltaje de batería como "temperatura" para compatibilidad
             airHumidity: 0.0, // No disponible
             lights: SmartDevice(
               isOn: sensorData.isOnline,
               value: sensorData.isOnline ? 100 : 0,
             ),
             airCondition: SmartDevice(
-              isOn: (sensorData.temperature ?? 20) > 25,
-              value: (sensorData.temperature ?? 20).round(),
+              isOn:
+                  (sensorData.vBatConv ?? 20) >
+                  25, // Usar voltaje de batería como referencia
+              value: (sensorData.socPercent ?? 50)
+                  .round(), // Usar SOC como valor
             ),
             timer: SmartDevice(isOn: false, value: 0),
             musicInfo: MusicInfo(isOn: false, currentSong: Song.defaultSong),
@@ -111,17 +116,20 @@ class IoTDataService {
         'last_update': latestData.isNotEmpty
             ? latestData.values.first.timestamp
             : DateTime.now(),
-        'avg_temperature': latestData.containsKey('temp')
-            ? latestData['temp']!.value
+        'avg_battery_voltage': latestData.containsKey('v_bat_conv')
+            ? latestData['v_bat_conv']!.value
             : 0.0,
-        'avg_voltage': latestData.containsKey('v')
-            ? latestData['v']!.value
+        'avg_output_voltage': latestData.containsKey('v_out_conv')
+            ? latestData['v_out_conv']!.value
             : 0.0,
-        'avg_current': latestData.containsKey('i')
-            ? latestData['i']!.value
+        'avg_current': latestData.containsKey('i_circuit')
+            ? latestData['i_circuit']!.value
             : 0.0,
-        'avg_pressure': latestData.containsKey('p')
-            ? latestData['p']!.value
+        'avg_soc': latestData.containsKey('soc_percent')
+            ? latestData['soc_percent']!.value
+            : 0.0,
+        'avg_soh': latestData.containsKey('soh_percent')
+            ? latestData['soh_percent']!.value
             : 0.0,
         'system_status': latestData.containsKey('status')
             ? latestData['status']!.valueAsString
@@ -133,10 +141,11 @@ class IoTDataService {
         'total_devices': 0,
         'active_devices': 0,
         'last_update': DateTime.now(),
-        'avg_temperature': 0.0,
-        'avg_voltage': 0.0,
+        'avg_battery_voltage': 0.0,
+        'avg_output_voltage': 0.0,
         'avg_current': 0.0,
-        'avg_pressure': 0.0,
+        'avg_soc': 0.0,
+        'avg_soh': 0.0,
         'system_status': 'error',
       };
     }

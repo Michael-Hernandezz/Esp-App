@@ -55,23 +55,6 @@ services:
     ports:
       - "8000:8000"
 
-  grafana:
-    image: grafana/grafana:11.3.0
-    container_name: grafana
-    restart: unless-stopped
-    depends_on:
-      - influxdb
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASS}
-      INFLUX_ORG: ${INFLUXDB_INIT_ORG}
-      INFLUX_BUCKET: ${INFLUXDB_INIT_BUCKET}
-      INFLUX_TOKEN: ${INFLUXDB_INIT_ADMIN_TOKEN}
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-
 volumes:
   influx-data:
   influx-config:
