@@ -39,12 +39,22 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
     });
 
     try {
+<<<<<<< Updated upstream
       print('🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}');
+=======
+      print(
+        '🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}',
+      );
+>>>>>>> Stashed changes
       final states = await ActuatorControlService.getActuatorStatus(
         widget.deviceId,
       );
       print('🔄 BMSControlWidget: Respuesta de API: $states');
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
       if (states != null) {
         setState(() {
           _actuatorStates = states;
@@ -71,6 +81,8 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
     final currentState = _actuatorStates[actuatorId] ?? 0;
     final newState = currentState == 1 ? 0 : 1;
     
+    print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
+
     print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
 
     setState(() {
@@ -117,7 +129,13 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
         });
 
         widget.onStateChanged?.call();
+<<<<<<< Updated upstream
         print('✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState');
+=======
+        print(
+          '✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState',
+        );
+>>>>>>> Stashed changes
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

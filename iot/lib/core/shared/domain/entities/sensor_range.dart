@@ -36,9 +36,15 @@ class SensorRange {
     if (isInCriticalRange(value)) {
       return AlertType.critical;
     } else if (value < adequateMin) {
+<<<<<<< Updated upstream
       return AlertType.below;  // Valores por debajo del mínimo
     } else if (value > adequateMax) {
       return AlertType.abnormal;  // Valores por encima del máximo
+=======
+      return AlertType.below; // Valores por debajo del mínimo
+    } else if (value > adequateMax) {
+      return AlertType.abnormal; // Valores por encima del máximo
+>>>>>>> Stashed changes
     } else {
       return AlertType.normal;
     }
@@ -60,9 +66,15 @@ class SensorRange {
 /// Tipos de alerta del sistema
 enum AlertType {
   normal,
+<<<<<<< Updated upstream
   below,      // Nuevo: valor por debajo del rango (amarillo)
   abnormal,   // Valor por encima del rango (rojo)
   critical,   // Valor crítico
+=======
+  below, // Nuevo: valor por debajo del rango (amarillo)
+  abnormal, // Valor por encima del rango (rojo)
+  critical, // Valor crítico
+>>>>>>> Stashed changes
 }
 
 /// Configuración de rangos para todas las variables del sistema
@@ -128,7 +140,12 @@ class SensorRangeConfig {
       variable: 'Estado de carga',
       adequateMin: 0.0,
       adequateMax: 100.0,
+<<<<<<< Updated upstream
       abnormalCondition: 'convertir voltaje de entrada en porcentaje (siendo 12.6 el 100% y 0 el 0%)',
+=======
+      abnormalCondition:
+          'convertir voltaje de entrada en porcentaje (siendo 12.6 el 100% y 0 el 0%)',
+>>>>>>> Stashed changes
       maximumMax: 100.0,
       unit: '%',
     ),
@@ -207,4 +224,8 @@ class SensorAlert {
       timestamp: DateTime.parse(map['timestamp']),
     );
   }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

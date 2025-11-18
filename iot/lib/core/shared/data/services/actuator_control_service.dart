@@ -175,7 +175,14 @@ class ActuatorControlService {
   /// Control de la bomba de carga (CP)
   static Future<bool> controlChargePump(String deviceId, bool enable) async {
     print('💧 Controlando CHARGE PUMP: deviceId=$deviceId, enable=$enable');
+<<<<<<< Updated upstream
     final result = await controlActuators(deviceId: deviceId, cpEnable: enable ? 1 : 0);
+=======
+    final result = await controlActuators(
+      deviceId: deviceId,
+      cpEnable: enable ? 1 : 0,
+    );
+>>>>>>> Stashed changes
     print('💧 Resultado CHARGE PUMP: $result');
     return result;
   }

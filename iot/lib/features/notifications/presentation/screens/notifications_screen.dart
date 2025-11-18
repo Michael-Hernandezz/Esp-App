@@ -56,7 +56,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '1',
       title: 'Voltaje de Batería Alto',
+<<<<<<< Updated upstream
       message: 'El voltaje de batería (dev-001) ha superado el umbral de 26V. Valor actual: 26.3V',
+=======
+      message:
+          'El voltaje de batería (dev-001) ha superado el umbral de 26V. Valor actual: 26.3V',
+>>>>>>> Stashed changes
       type: NotificationType.warning,
       timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
       isRead: false,
@@ -65,7 +70,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '2',
       title: 'BMS: Carga Habilitada',
+<<<<<<< Updated upstream
       message: 'El sistema BMS ha habilitado la carga automáticamente. Estado: CHG_ENABLE = ON',
+=======
+      message:
+          'El sistema BMS ha habilitado la carga automáticamente. Estado: CHG_ENABLE = ON',
+>>>>>>> Stashed changes
       type: NotificationType.info,
       timestamp: DateTime.now().subtract(const Duration(minutes: 12)),
       isRead: false,
@@ -83,7 +93,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '4',
       title: 'Estado de Carga (SOC) Bajo',
+<<<<<<< Updated upstream
       message: 'El estado de carga de la batería está por debajo del 20%: 18.7%',
+=======
+      message:
+          'El estado de carga de la batería está por debajo del 20%: 18.7%',
+>>>>>>> Stashed changes
       type: NotificationType.warning,
       timestamp: DateTime.now().subtract(const Duration(minutes: 25)),
       isRead: false,
@@ -92,7 +107,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '5',
       title: 'Sistema BMS Conectado',
+<<<<<<< Updated upstream
       message: 'El dispositivo dev-001 se ha conectado exitosamente al sistema de monitoreo',
+=======
+      message:
+          'El dispositivo dev-001 se ha conectado exitosamente al sistema de monitoreo',
+>>>>>>> Stashed changes
       type: NotificationType.security,
       timestamp: DateTime.now().subtract(const Duration(hours: 1)),
       isRead: true,
@@ -101,7 +121,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '6',
       title: 'Voltaje de Salida Estable',
+<<<<<<< Updated upstream
       message: 'El voltaje de salida del convertidor se mantiene estable en 12.1V',
+=======
+      message:
+          'El voltaje de salida del convertidor se mantiene estable en 12.1V',
+>>>>>>> Stashed changes
       type: NotificationType.info,
       timestamp: DateTime.now().subtract(const Duration(minutes: 15)),
       isRead: true,
@@ -110,7 +135,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     SmartNotification(
       id: '7',
       title: 'Alerta: Descarga Deshabilitada',
+<<<<<<< Updated upstream
       message: 'El sistema BMS ha deshabilitado la descarga por protección. DSG_ENABLE = OFF',
+=======
+      message:
+          'El sistema BMS ha deshabilitado la descarga por protección. DSG_ENABLE = OFF',
+>>>>>>> Stashed changes
       type: NotificationType.warning,
       timestamp: DateTime.now().subtract(const Duration(minutes: 45)),
       isRead: false,
@@ -165,9 +195,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         const SizedBox(height: 16),
         _buildSecurityOverview(),
         const SizedBox(height: 16),
-        ..._securityDevices
-            .map((device) => _buildSecurityDeviceCard(device))
-            ,
+        ..._securityDevices.map((device) => _buildSecurityDeviceCard(device)),
       ],
     );
   }
@@ -360,9 +388,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        ..._notifications
-            .map((notification) => _buildNotificationCard(notification))
-            ,
+        ..._notifications.map(
+          (notification) => _buildNotificationCard(notification),
+        ),
       ],
     );
   }

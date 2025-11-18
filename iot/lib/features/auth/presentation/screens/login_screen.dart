@@ -26,7 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardVisible = keyboardHeight > 0;
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
       resizeToAvoidBottomInset: true,
@@ -35,9 +39,17 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(24.0),
           child: ConstrainedBox(
             constraints: BoxConstraints(
+<<<<<<< Updated upstream
               minHeight: MediaQuery.of(context).size.height - 
                          MediaQuery.of(context).padding.top - 
                          MediaQuery.of(context).padding.bottom - 48,
+=======
+              minHeight:
+                  MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top -
+                  MediaQuery.of(context).padding.bottom -
+                  48,
+>>>>>>> Stashed changes
             ),
             child: IntrinsicHeight(
               child: Column(
@@ -67,7 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildHeader() {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardVisible = keyboardHeight > 0;
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     return Column(
       children: [
         Container(
@@ -96,8 +112,13 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Accede con tus credenciales del dispositivo',
           style: TextStyle(
+<<<<<<< Updated upstream
             color: Colors.white.withOpacity(0.7), 
             fontSize: isKeyboardVisible ? 14 : 16
+=======
+            color: Colors.white.withOpacity(0.7),
+            fontSize: isKeyboardVisible ? 14 : 16,
+>>>>>>> Stashed changes
           ),
           textAlign: TextAlign.center,
         ),

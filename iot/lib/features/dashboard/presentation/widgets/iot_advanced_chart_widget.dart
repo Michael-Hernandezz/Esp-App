@@ -224,9 +224,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
             children: [
               Text(
                 widget.title,
+<<<<<<< Updated upstream
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(
+=======
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+>>>>>>> Stashed changes
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -308,9 +312,15 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               children: [
                 Text(
                   'Valor Actual',
+<<<<<<< Updated upstream
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey[300],
                   ),
+=======
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[300]),
+>>>>>>> Stashed changes
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -473,9 +483,14 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                         axisSide: meta.axisSide,
                         child: Text(
                           '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}',
+<<<<<<< Updated upstream
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.grey[300],
                           ),
+=======
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.grey[300]),
+>>>>>>> Stashed changes
                         ),
                       );
                     }
@@ -491,9 +506,15 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   getTitlesWidget: (double value, TitleMeta meta) {
                     return Text(
                       '${value.toInt()}${widget.unit}',
+<<<<<<< Updated upstream
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[300],
                       ),
+=======
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[300]),
+>>>>>>> Stashed changes
                     );
                   },
                 ),
@@ -679,9 +700,16 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     final currentValue = _data.last.value;
     final maxValue = widget.maxThreshold ?? 100.0;
     final minValue = widget.minThreshold ?? 0.0;
+<<<<<<< Updated upstream
     
     // Calcular porcentaje del valor actual
     final normalizedValue = ((currentValue - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
+=======
+
+    // Calcular porcentaje del valor actual
+    final normalizedValue = ((currentValue - minValue) / (maxValue - minValue))
+        .clamp(0.0, 1.0);
+>>>>>>> Stashed changes
     final currentPercentage = normalizedValue * 100;
 
     return AnimatedBuilder(
@@ -716,12 +744,24 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   ),
                 ),
               ),
+<<<<<<< Updated upstream
               
               const SizedBox(height: 24),
               
               // Valor principal destacado
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+=======
+
+              const SizedBox(height: 24),
+
+              // Valor principal destacado
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 24,
+                ),
+>>>>>>> Stashed changes
                 decoration: BoxDecoration(
                   color: const Color(0xFF0D1117),
                   borderRadius: BorderRadius.circular(16),
@@ -751,7 +791,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                         letterSpacing: -2,
                         shadows: [
                           Shadow(
+<<<<<<< Updated upstream
                             color: _getGaugeColor(normalizedValue).withOpacity(0.5),
+=======
+                            color: _getGaugeColor(
+                              normalizedValue,
+                            ).withOpacity(0.5),
+>>>>>>> Stashed changes
                             blurRadius: 8,
                           ),
                         ],
@@ -769,15 +815,28 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   ],
                 ),
               ),
+<<<<<<< Updated upstream
               
               const SizedBox(height: 20),
               
+=======
+
+              const SizedBox(height: 20),
+
+>>>>>>> Stashed changes
               // Información del estado y rango
               Row(
                 children: [
                   Expanded(
                     child: Container(
+<<<<<<< Updated upstream
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+=======
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
+>>>>>>> Stashed changes
                       decoration: BoxDecoration(
                         color: const Color(0xFF0D1117),
                         borderRadius: BorderRadius.circular(12),
@@ -813,7 +872,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                               fontWeight: FontWeight.w700,
                               shadows: [
                                 Shadow(
+<<<<<<< Updated upstream
                                   color: _getGaugeColor(normalizedValue).withOpacity(0.3),
+=======
+                                  color: _getGaugeColor(
+                                    normalizedValue,
+                                  ).withOpacity(0.3),
+>>>>>>> Stashed changes
                                   blurRadius: 4,
                                 ),
                               ],
@@ -826,7 +891,14 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   const SizedBox(width: 16),
                   Expanded(
                     child: Container(
+<<<<<<< Updated upstream
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+=======
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
+>>>>>>> Stashed changes
                       decoration: BoxDecoration(
                         color: const Color(0xFF0D1117),
                         borderRadius: BorderRadius.circular(12),
@@ -862,7 +934,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                               fontWeight: FontWeight.w700,
                               shadows: [
                                 Shadow(
+<<<<<<< Updated upstream
                                   color: _getGaugeColor(normalizedValue).withOpacity(0.3),
+=======
+                                  color: _getGaugeColor(
+                                    normalizedValue,
+                                  ).withOpacity(0.3),
+>>>>>>> Stashed changes
                                   blurRadius: 4,
                                 ),
                               ],
@@ -883,7 +961,11 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
 
   Color _getGaugeColor(double normalizedValue) {
     if (normalizedValue < 0.2) return const Color(0xFFFF4444); // Rojo
+<<<<<<< Updated upstream
     if (normalizedValue < 0.4) return const Color(0xFFFF8800); // Naranja  
+=======
+    if (normalizedValue < 0.4) return const Color(0xFFFF8800); // Naranja
+>>>>>>> Stashed changes
     if (normalizedValue < 0.7) return const Color(0xFFFFDD00); // Amarillo
     if (normalizedValue < 0.9) return const Color(0xFF88DD00); // Verde claro
     return const Color(0xFF00DD44); // Verde
@@ -897,17 +979,25 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
       final currentValue = _data.last.value;
       final maxValue = widget.maxThreshold ?? 100.0;
       final minValue = widget.minThreshold ?? 0.0;
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
       return Container(
         margin: const EdgeInsets.only(top: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: const Color(0xFF0D1117),
           borderRadius: BorderRadius.circular(12),
+<<<<<<< Updated upstream
           border: Border.all(
             color: const Color(0xFF21262D),
             width: 1,
           ),
+=======
+          border: Border.all(color: const Color(0xFF21262D), width: 1),
+>>>>>>> Stashed changes
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -934,11 +1024,15 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 ),
               ],
             ),
+<<<<<<< Updated upstream
             Container(
               width: 1,
               height: 30,
               color: const Color(0xFF21262D),
             ),
+=======
+            Container(width: 1, height: 30, color: const Color(0xFF21262D)),
+>>>>>>> Stashed changes
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -987,7 +1081,15 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         ),
         const SizedBox(width: 8),
         Expanded(
+<<<<<<< Updated upstream
           child: _buildStatCard('Máximo', max.toStringAsFixed(1), SHColors.chartWarning),
+=======
+          child: _buildStatCard(
+            'Máximo',
+            max.toStringAsFixed(1),
+            SHColors.chartWarning,
+          ),
+>>>>>>> Stashed changes
         ),
       ],
     );
@@ -1165,13 +1267,21 @@ class CleanGaugePainter extends CustomPainter {
 
     // Dibujar segmentos de colores limpios
     final segments = [
+<<<<<<< Updated upstream
       const Color(0xFFE53E3E), // Rojo 
+=======
+      const Color(0xFFE53E3E), // Rojo
+>>>>>>> Stashed changes
       const Color(0xFFFF8C00), // Naranja
       const Color(0xFFECC94B), // Amarillo
       const Color(0xFF68D391), // Verde claro
       const Color(0xFF38A169), // Verde
     ];
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     double startAngle = math.pi;
     const totalAngle = math.pi;
 
@@ -1221,7 +1331,16 @@ class CleanGaugePainter extends CustomPainter {
     _drawCleanLabels(canvas, size, center, radius);
   }
 
+<<<<<<< Updated upstream
   void _drawCleanLabels(Canvas canvas, Size size, Offset center, double radius) {
+=======
+  void _drawCleanLabels(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    double radius,
+  ) {
+>>>>>>> Stashed changes
     final textStyle = TextStyle(
       color: Colors.white.withOpacity(0.8),
       fontSize: 14,

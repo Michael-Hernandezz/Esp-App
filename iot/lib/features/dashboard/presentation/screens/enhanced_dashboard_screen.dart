@@ -68,6 +68,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
     try {
       // Solo validar si hay datos del sistema cargados
       if (_systemStats.isEmpty) return;
+<<<<<<< Updated upstream
       
       // Crear mapa con los valores actuales de sensores
       final Map<String, double> sensorValues = {};
@@ -78,14 +79,35 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       }
       if (_systemStats.containsKey('voltage_out')) {
         sensorValues['v_conv_out'] = (_systemStats['voltage_out'] as num).toDouble();
+=======
+
+      // Crear mapa con los valores actuales de sensores
+      final Map<String, double> sensorValues = {};
+
+      // Mapear los datos del sistema a los nombres de variables de rango
+      if (_systemStats.containsKey('voltage_in')) {
+        sensorValues['v_conv_in'] = (_systemStats['voltage_in'] as num)
+            .toDouble();
+      }
+      if (_systemStats.containsKey('voltage_out')) {
+        sensorValues['v_conv_out'] = (_systemStats['voltage_out'] as num)
+            .toDouble();
+>>>>>>> Stashed changes
       }
       if (_systemStats.containsKey('current')) {
         sensorValues['i_circuit'] = (_systemStats['current'] as num).toDouble();
       }
       if (_systemStats.containsKey('avg_battery_voltage')) {
+<<<<<<< Updated upstream
         sensorValues['v_cell_1'] = (_systemStats['avg_battery_voltage'] as num).toDouble();
       }
       
+=======
+        sensorValues['v_cell_1'] = (_systemStats['avg_battery_voltage'] as num)
+            .toDouble();
+      }
+
+>>>>>>> Stashed changes
       // Validar solo si tenemos datos para validar
       if (sensorValues.isNotEmpty) {
         await _alertService.validateSensorData(sensorValues);
@@ -105,7 +127,12 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         title: const Text('Dashboard IoT'),
         backgroundColor: SHColors.cardColor,
         foregroundColor: Colors.white,
+<<<<<<< Updated upstream
         automaticallyImplyLeading: false, // Esto quita el botón de menú hamburguesa
+=======
+        automaticallyImplyLeading:
+            false, // Esto quita el botón de menú hamburguesa
+>>>>>>> Stashed changes
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -118,16 +145,27 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
                     duration: Duration(seconds: 1),
                   ),
                 );
+<<<<<<< Updated upstream
                 
+=======
+
+>>>>>>> Stashed changes
                 // Actualizar datos en paralelo
                 await Future.wait([
                   roomStateNotifier?.refreshData() ?? Future.value(),
                   _loadSystemStats(),
                 ]);
+<<<<<<< Updated upstream
                 
                 // Validar datos después de la actualización para detectar alertas reales
                 await _validateCurrentSensorData();
                 
+=======
+
+                // Validar datos después de la actualización para detectar alertas reales
+                await _validateCurrentSensorData();
+
+>>>>>>> Stashed changes
                 // Confirmar actualización
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -224,9 +262,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           children: [
             Text(
               'Resumen del Sistema',
+<<<<<<< Updated upstream
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
+=======
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+>>>>>>> Stashed changes
                 fontWeight: FontWeight.bold,
                 color: SHColors.chartPrimary,
               ),
@@ -581,7 +623,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         return Card(
           color: SHColors.cardColor,
           elevation: 4,
+<<<<<<< Updated upstream
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+=======
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+>>>>>>> Stashed changes
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -689,6 +737,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   /// Extrae los estados BMS desde los datos de sistema cargados
   Map<String, int> _extractBMSStatesFromData() {
     final Map<String, int> bmsStates = {};
+<<<<<<< Updated upstream
     
     // Buscar en los datos de sistema los estados BMS
     if (_systemStats.containsKey('chg_enable')) {
@@ -704,6 +753,27 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       bmsStates['pmon_enable'] = (_systemStats['pmon_enable'] as num?)?.round() ?? 0;
     }
     
+=======
+
+    // Buscar en los datos de sistema los estados BMS
+    if (_systemStats.containsKey('chg_enable')) {
+      bmsStates['chg_enable'] =
+          (_systemStats['chg_enable'] as num?)?.round() ?? 0;
+    }
+    if (_systemStats.containsKey('dsg_enable')) {
+      bmsStates['dsg_enable'] =
+          (_systemStats['dsg_enable'] as num?)?.round() ?? 0;
+    }
+    if (_systemStats.containsKey('cp_enable')) {
+      bmsStates['cp_enable'] =
+          (_systemStats['cp_enable'] as num?)?.round() ?? 0;
+    }
+    if (_systemStats.containsKey('pmon_enable')) {
+      bmsStates['pmon_enable'] =
+          (_systemStats['pmon_enable'] as num?)?.round() ?? 0;
+    }
+
+>>>>>>> Stashed changes
     print('Estados BMS extraídos desde dashboard: $bmsStates');
     return bmsStates;
   }

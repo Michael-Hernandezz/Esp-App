@@ -53,12 +53,28 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
             children: [
               _buildTestButton(
                 'Voltaje Bajo',
+<<<<<<< Updated upstream
                 () => _simulateAlert('v_conv_in', 7.5, 'Voltaje convertidor entrada'),
+=======
+                () => _simulateAlert(
+                  'v_conv_in',
+                  7.5,
+                  'Voltaje convertidor entrada',
+                ),
+>>>>>>> Stashed changes
                 Colors.orange,
               ),
               _buildTestButton(
                 'Voltaje Alto',
+<<<<<<< Updated upstream
                 () => _simulateAlert('v_conv_in', 13.0, 'Voltaje convertidor entrada'),
+=======
+                () => _simulateAlert(
+                  'v_conv_in',
+                  13.0,
+                  'Voltaje convertidor entrada',
+                ),
+>>>>>>> Stashed changes
                 Colors.red,
               ),
               _buildTestButton(
@@ -68,12 +84,22 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
               ),
               _buildTestButton(
                 'Batería Baja',
+<<<<<<< Updated upstream
                 () => _simulateAlert('soc_percent', 60.0, 'Salud de la batería'),
+=======
+                () =>
+                    _simulateAlert('soc_percent', 60.0, 'Salud de la batería'),
+>>>>>>> Stashed changes
                 Colors.red,
               ),
               _buildTestButton(
                 'Corriente Alta',
+<<<<<<< Updated upstream
                 () => _simulateAlert('i_circuit', 4.5, 'Corriente de las celdas'),
+=======
+                () =>
+                    _simulateAlert('i_circuit', 4.5, 'Corriente de las celdas'),
+>>>>>>> Stashed changes
                 Colors.red,
               ),
               _buildTestButton(
@@ -95,7 +121,13 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
               Text(
                 'Monitoreo: ${_alertService.isMonitoring ? 'ACTIVO' : 'INACTIVO'}',
                 style: TextStyle(
+<<<<<<< Updated upstream
                   color: _alertService.isMonitoring ? Colors.green : Colors.grey,
+=======
+                  color: _alertService.isMonitoring
+                      ? Colors.green
+                      : Colors.grey,
+>>>>>>> Stashed changes
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -127,9 +159,13 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
+<<<<<<< Updated upstream
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+=======
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+>>>>>>> Stashed changes
       ),
       child: Text(label),
     );
@@ -226,7 +262,12 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
+<<<<<<< Updated upstream
                                     crossAxisAlignment: CrossAxisAlignment.start,
+=======
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+>>>>>>> Stashed changes
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
@@ -348,4 +389,8 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
         return 'VALOR NORMAL';
     }
   }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

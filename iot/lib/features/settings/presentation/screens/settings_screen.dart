@@ -279,7 +279,11 @@ class SettingsScreen extends StatelessWidget {
 
   void _showLogoutDialog(BuildContext context) {
     final authNotifier = AuthProvider.of(context);
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(

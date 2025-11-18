@@ -31,7 +31,13 @@ class BMSDataWidget extends StatelessWidget {
                   children: [
                     Icon(
                       sensorData.isOnline ? Icons.wifi : Icons.wifi_off,
+<<<<<<< Updated upstream
                       color: sensorData.isOnline ? SHColors.chartSecondary : SHColors.chartWarning,
+=======
+                      color: sensorData.isOnline
+                          ? SHColors.chartSecondary
+                          : SHColors.chartWarning,
+>>>>>>> Stashed changes
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -125,7 +131,13 @@ class BMSDataWidget extends StatelessWidget {
                     'Alerta',
                     sensorData.alert == 1 ? 'ACTIVA' : 'Normal',
                     sensorData.alert == 1 ? Icons.warning : Icons.check_circle,
+<<<<<<< Updated upstream
                     sensorData.alert == 1 ? SHColors.chartWarning : SHColors.chartSecondary,
+=======
+                    sensorData.alert == 1
+                        ? SHColors.chartWarning
+                        : SHColors.chartSecondary,
+>>>>>>> Stashed changes
                   ),
                 ),
               ],

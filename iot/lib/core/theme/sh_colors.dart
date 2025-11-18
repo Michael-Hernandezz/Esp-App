@@ -18,7 +18,11 @@ abstract class SHColors {
     Color(0xff1f242c),
     Color(0xff1a1d23),
   ];
+<<<<<<< Updated upstream
   
+=======
+
+>>>>>>> Stashed changes
   // Colores suaves para gráficas
   static const Color chartPrimary = Color(0xff4fc3f7);
   static const Color chartSecondary = Color(0xff81c784);
