@@ -2,7 +2,7 @@
 import json, os, time, random, threading
 import paho.mqtt.client as mqtt
 
-BROKER = os.getenv("MQTT_HOST", "localhost")
+BROKER = os.getenv("MQTT_HOST", "104.131.178.99")
 PORT = int(os.getenv("MQTT_PORT", "1883"))
 USER = os.getenv("MQTT_USER", "admin")
 PASS = os.getenv("MQTT_PASS", "admin12345")
