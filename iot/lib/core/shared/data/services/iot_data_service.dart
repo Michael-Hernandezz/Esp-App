@@ -150,4 +150,26 @@ class IoTDataService {
       };
     }
   }
+
+  /// Obtiene los últimos datos del sensor BMS como IoTSensorData
+  static Future<IoTSensorData?> getLatestSensorData() async {
+    try {
+      final sensorReadings = await InfluxDBService.getLatestSensorData();
+
+      if (sensorReadings.isEmpty) {
+        print('⚠️ Sin datos BMS disponibles');
+        return null;
+      }
+
+      // Crear IoTSensorData desde las lecturas
+      return IoTSensorData.fromSensorReadings(
+        deviceId: 'dev-001', // Device ID por defecto
+        roomName: 'Sistema BMS',
+        readings: sensorReadings,
+      );
+    } catch (e) {
+      print('Error obteniendo datos del sensor: $e');
+      return null;
+    }
+  }
 }

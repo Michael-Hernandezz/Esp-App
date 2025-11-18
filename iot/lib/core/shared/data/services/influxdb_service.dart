@@ -15,23 +15,33 @@ class InfluxDBService {
     'Accept': 'application/csv',
   };
 
-  /// Obtiene datos de sensores desde InfluxDB
+  /// Obtiene datos de sensores desde InfluxDB usando mqtt_consumer measurement
   static Future<List<SensorReading>> getSensorData({
-    required String measurement,
+    required String field,
     String? deviceId,
     Duration? timeRange,
   }) async {
     try {
-      print('Iniciando consulta para measurement: $measurement');
+      print('Iniciando consulta para field: $field');
 
-      // Consulta Flux para obtener datos
-      final query =
-          '''
+      // Consulta Flux para obtener datos del measurement mqtt_consumer
+      final query = deviceId != null
+          ? '''
 from(bucket: "$_bucket")
   |> range(start: -24h)
-  |> filter(fn: (r) => r["_field"] == "$measurement")
+  |> filter(fn: (r) => r["_measurement"] == "mqtt_consumer")
+  |> filter(fn: (r) => r["_field"] == "$field")
+  |> filter(fn: (r) => r["topic"] == "microgrid/$deviceId/telemetry")
   |> sort(columns: ["_time"], desc: true)
-  |> limit(n: 10)
+  |> limit(n: 50)
+'''
+          : '''
+from(bucket: "$_bucket")
+  |> range(start: -24h)
+  |> filter(fn: (r) => r["_measurement"] == "mqtt_consumer")
+  |> filter(fn: (r) => r["_field"] == "$field")
+  |> sort(columns: ["_time"], desc: true)
+  |> limit(n: 50)
 ''';
 
       print('Query: $query');
@@ -44,20 +54,14 @@ from(bucket: "$_bucket")
         body: jsonEncode({'query': query}),
       );
 
-      print('Status Code: ${response.statusCode}');
-
       if (response.statusCode == 200) {
-        print('Respuesta exitosa de InfluxDB para $measurement');
-        print('Contenido completo de respuesta: ${response.body}');
-        print('Longitud de respuesta: ${response.body.length}');
         final parsedData = _parseInfluxJsonResponse(response.body);
-        print('Datos parseados: ${parsedData.length} registros');
-        if (parsedData.isNotEmpty) {
-          print('Primer registro: ${parsedData.first}');
+        if (parsedData.isEmpty) {
+          print('⚠️ No hay datos para el campo: $field');
         }
         return parsedData;
       } else {
-        print('Error en InfluxDB: ${response.statusCode} - ${response.body}');
+        print('❌ Error InfluxDB: ${response.statusCode}');
         return [];
       }
     } catch (e) {
@@ -69,40 +73,41 @@ from(bucket: "$_bucket")
   /// Obtiene últimos valores de sensores para el dashboard
   static Future<Map<String, SensorReading>> getLatestSensorData() async {
     try {
-      // Nuevas variables del sistema BMS
-      final measurements = [
-        'v_bat_conv', // Voltaje de batería (convertidor)
-        'v_out_conv', // Voltaje de salida (convertidor)
-        'v_cell1', // Voltaje celda 1
-        'v_cell2', // Voltaje celda 2
-        'v_cell3', // Voltaje celda 3
-        'i_circuit', // Corriente del circuito
-        'soc_percent', // Estado de carga (%)
-        'soh_percent', // Salud de la batería (%)
-        'alert', // Alerta (1/0)
-        'chg_enable', // CHG enable (1/0)
-        'dsg_enable', // DSG enable (1/0)
-        'cp_enable', // CP enable (1/0)
-        'pmon_enable', // PMON enable (1/0)
-        'status', // Estado general
+      // Variables del sistema BMS
+      final fields = [
+        'v_bat_conv',
+        'v_out_conv',
+        'v_cell1',
+        'v_cell2',
+        'v_cell3',
+        'i_circuit',
+        'soc_percent',
+        'soh_percent',
+        'alert',
+        'chg_enable',
+        'dsg_enable',
+        'cp_enable',
+        'pmon_enable',
       ];
 
       final Map<String, SensorReading> latestData = {};
+      int dataCount = 0;
 
-      for (final measurement in measurements) {
+      for (final field in fields) {
         final data = await getSensorData(
-          measurement: measurement,
-          timeRange: const Duration(hours: 24),
+          field: field,
+          deviceId: 'dev-001',
+          timeRange: const Duration(hours: 2),
         );
 
         if (data.isNotEmpty) {
-          latestData[measurement] = data.last;
+          latestData[field] = data.last;
+          dataCount++;
         }
       }
 
       return latestData;
     } catch (e) {
-      print('Error al obtener datos más recientes: $e');
       return {};
     }
   }
@@ -114,7 +119,7 @@ from(bucket: "$_bucket")
     required Duration timeRange,
   }) async {
     return getSensorData(
-      measurement: measurement,
+      field: measurement,
       deviceId: deviceId,
       timeRange: timeRange,
     );
@@ -157,26 +162,24 @@ from(bucket: "$_bucket")
           final measurement =
               measurementIndex >= 0 && measurementIndex < values.length
               ? values[measurementIndex]
-              : 'unknown';
+              : 'mqtt_consumer';
 
           final numericValue = double.tryParse(rawValue) ?? 0.0;
-          final textValue = null;
 
           final reading = SensorReading(
             timestamp: timeIndex >= 0 && timeIndex < values.length
                 ? DateTime.parse(values[timeIndex])
                 : DateTime.now(),
             value: numericValue,
-            textValue: textValue,
+            textValue: null,
             measurement: measurement,
             deviceId: deviceIdIndex >= 0 && deviceIdIndex < values.length
                 ? values[deviceIdIndex]
-                : 'unknown',
+                : 'dev-001',
           );
           readings.add(reading);
-          print('Registro parseado: ${reading.toString()}');
         } catch (e) {
-          print('Error parseando línea: $line - $e');
+          // Ignorar errores de parseado menores
         }
       }
     } catch (e) {

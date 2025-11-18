@@ -17,7 +17,6 @@ class EnhancedDashboardScreen extends StatefulWidget {
 
 class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Map<String, dynamic> _systemStats = {};
-  List<SmartRoom> _iotRooms = [];
   bool _isLoading = true;
 
   @override
@@ -29,10 +28,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Future<void> _loadSystemStats() async {
     try {
       final stats = await IoTDataService.getSystemStats();
-      final iotRooms = await IoTDataService.getRealIoTData();
       setState(() {
         _systemStats = stats;
-        _iotRooms = iotRooms;
         _isLoading = false;
       });
     } catch (e) {
@@ -307,51 +304,6 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   }
 
   Widget _buildBMSSection() {
-    if (_iotRooms.isEmpty) {
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Icon(Icons.battery_unknown, size: 48, color: Colors.grey[400]),
-              const SizedBox(height: 8),
-              Text(
-                'Sistema BMS No Conectado',
-                style: TextStyle(color: Colors.grey[400], fontSize: 16),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Verifica la conexión del dispositivo',
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    // Usar el primer dispositivo IoT encontrado
-    final firstDevice = _iotRooms.first;
-    final sensorData = IoTSensorData(
-      deviceId: firstDevice.id,
-      roomName: firstDevice.name,
-      vBatConv: firstDevice.temperature, // Mapeo temporal
-      vOutConv: 12.0, // Valor por defecto
-      vCell1: 3.7, // Valores simulados
-      vCell2: 3.6,
-      vCell3: 3.8,
-      iCircuit: 2.5,
-      socPercent: 75.0,
-      sohPercent: 95.0,
-      alert: 0,
-      chgEnable: 1,
-      dsgEnable: 1,
-      cpEnable: 0,
-      pmonEnable: 1,
-      status: 'ok',
-      lastUpdated: DateTime.now(),
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -363,14 +315,76 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        BMSDataWidget(sensorData: sensorData, onRefresh: _loadSystemStats),
-        const SizedBox(height: 16),
-        BMSControlWidget(
-          deviceId: firstDevice.id,
-          onStateChanged: _loadSystemStats,
+        FutureBuilder<IoTSensorData?>(
+          future: _getBMSData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
+
+            if (snapshot.hasError || !snapshot.hasData) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.battery_unknown,
+                        size: 48,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Sistema BMS No Conectado',
+                        style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Verifica la conexión del dispositivo',
+                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            final sensorData = snapshot.data!;
+            return Column(
+              children: [
+                BMSDataWidget(
+                  sensorData: sensorData,
+                  onRefresh: _loadSystemStats,
+                ),
+                const SizedBox(height: 16),
+                BMSControlWidget(
+                  deviceId: sensorData.deviceId,
+                  onStateChanged: _loadSystemStats,
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
+  }
+
+  Future<IoTSensorData?> _getBMSData() async {
+    try {
+      final latestData = await IoTDataService.getLatestSensorData();
+      if (latestData != null) {
+        return latestData;
+      }
+      return null;
+    } catch (e) {
+      print('Error obteniendo datos BMS: $e');
+      return null;
+    }
   }
 
   Widget _buildSensorCharts() {

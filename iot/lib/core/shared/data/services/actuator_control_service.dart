@@ -4,7 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Servicio para controlar actuadores del sistema BMS a través de la API
 class ActuatorControlService {
-  static final String _apiUrl = dotenv.env['API_URL'] ?? 'http://10.0.2.2:8000';
+  static final String _apiUrl =
+      dotenv.env['API_URL'] ?? 'http://104.131.178.99:8000';
 
   /// Controla los actuadores del sistema BMS
   static Future<bool> controlActuators({
@@ -23,26 +24,17 @@ class ActuatorControlService {
       if (cpEnable != null) payload['cp_enable'] = cpEnable;
       if (pmonEnable != null) payload['pmon_enable'] = pmonEnable;
 
-      print('Enviando comando de actuadores: $payload');
-
       final response = await http.post(
         Uri.parse('$_apiUrl/actuators/control'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(payload),
       );
 
-      print(
-        'Respuesta del servidor: ${response.statusCode} - ${response.body}',
-      );
-
       if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        print('Comando enviado exitosamente: ${result['payload']}');
+        print('✅ Actuador controlado exitosamente');
         return true;
       } else {
-        print(
-          'Error en el servidor: ${response.statusCode} - ${response.body}',
-        );
+        print('❌ Error controlando actuador: ${response.statusCode}');
         return false;
       }
     } catch (e) {
