@@ -27,43 +27,51 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
   void initState() {
     super.initState();
     _actuatorStates = widget.initialStates ?? {};
-    if (_actuatorStates.isEmpty) {
-      _loadActuatorStates();
-    }
+    // Siempre cargar estados desde la API para asegurar sincronización
+    _loadActuatorStates();
   }
 
   Future<void> _loadActuatorStates() async {
+    print('🔄 BMSControlWidget: Iniciando carga de estados desde API...');
     setState(() {
       _isLoading = true;
       _error = null;
     });
 
     try {
+      print('🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}');
       final states = await ActuatorControlService.getActuatorStatus(
         widget.deviceId,
       );
+      print('🔄 BMSControlWidget: Respuesta de API: $states');
+      
       if (states != null) {
         setState(() {
           _actuatorStates = states;
           _isLoading = false;
         });
+        print('✅ BMSControlWidget: Estados actualizados: $_actuatorStates');
       } else {
         setState(() {
           _error = 'No se pudieron cargar los estados';
           _isLoading = false;
         });
+        print('❌ BMSControlWidget: Error - No se pudieron cargar estados');
       }
     } catch (e) {
       setState(() {
         _error = 'Error: $e';
         _isLoading = false;
       });
+      print('❌ BMSControlWidget: Excepción al cargar estados: $e');
     }
   }
 
   Future<void> _toggleActuator(String actuatorId) async {
     final currentState = _actuatorStates[actuatorId] ?? 0;
     final newState = currentState == 1 ? 0 : 1;
+    
+    print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
 
     setState(() {
       _isLoading = true;
@@ -71,6 +79,7 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
 
     try {
       bool success = false;
+      print('🎮 BMSControlWidget: Enviando comando para $actuatorId...');
 
       switch (actuatorId) {
         case 'chg_enable':
@@ -99,6 +108,8 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
           break;
       }
 
+      print('🎮 BMSControlWidget: Resultado del comando: $success');
+
       if (success) {
         setState(() {
           _actuatorStates[actuatorId] = newState;
@@ -106,6 +117,7 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
         });
 
         widget.onStateChanged?.call();
+        print('✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

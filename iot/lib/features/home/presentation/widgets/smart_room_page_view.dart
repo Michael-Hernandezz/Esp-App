@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/shared/presentation/widgets/room_card.dart';
-import '../../../../core/core.dart';
+import 'package:iot/core/shared/presentation/widgets/room_card.dart';
+import 'package:iot/core/shared/presentation/providers/room_state_provider.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
 import '../../../smart_room/screens/room_details_screen.dart';
 
 class SmartRoomsPageView extends StatelessWidget {

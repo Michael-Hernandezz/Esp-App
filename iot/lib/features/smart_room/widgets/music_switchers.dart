@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/core.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/theme/sh_colors.dart';
+import 'package:iot/core/theme/sh_icons.dart';
+import 'package:iot/core/shared/presentation/providers/room_state_provider.dart';
+import 'package:iot/core/shared/presentation/services/message_service.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_card.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_switcher.dart';
 
 class MusicSwitchers extends StatelessWidget {
   const MusicSwitchers({required this.room, super.key});

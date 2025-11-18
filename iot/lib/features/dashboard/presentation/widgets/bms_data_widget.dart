@@ -31,7 +31,7 @@ class BMSDataWidget extends StatelessWidget {
                   children: [
                     Icon(
                       sensorData.isOnline ? Icons.wifi : Icons.wifi_off,
-                      color: sensorData.isOnline ? Colors.green : Colors.red,
+                      color: sensorData.isOnline ? SHColors.chartSecondary : SHColors.chartWarning,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -125,7 +125,7 @@ class BMSDataWidget extends StatelessWidget {
                     'Alerta',
                     sensorData.alert == 1 ? 'ACTIVA' : 'Normal',
                     sensorData.alert == 1 ? Icons.warning : Icons.check_circle,
-                    sensorData.alert == 1 ? Colors.red : Colors.green,
+                    sensorData.alert == 1 ? SHColors.chartWarning : SHColors.chartSecondary,
                   ),
                 ),
               ],
@@ -219,40 +219,40 @@ class BMSDataWidget extends StatelessWidget {
   Color _getVoltageColor(double? voltage, double nominal) {
     if (voltage == null) return Colors.grey;
     final ratio = voltage / nominal;
-    if (ratio > 1.1) return Colors.red;
-    if (ratio > 0.9) return Colors.green;
-    if (ratio > 0.8) return Colors.orange;
-    return Colors.red;
+    if (ratio > 1.1) return SHColors.chartWarning;
+    if (ratio > 0.9) return SHColors.chartSecondary;
+    if (ratio > 0.8) return SHColors.chartAccent;
+    return SHColors.chartWarning;
   }
 
   Color _getCellVoltageColor(double? voltage) {
     if (voltage == null) return Colors.grey;
-    if (voltage > 4.2) return Colors.red;
-    if (voltage > 3.2) return Colors.green;
-    if (voltage > 3.0) return Colors.orange;
-    return Colors.red;
+    if (voltage > 4.2) return SHColors.chartWarning;
+    if (voltage > 3.2) return SHColors.chartSecondary;
+    if (voltage > 3.0) return SHColors.chartAccent;
+    return SHColors.chartWarning;
   }
 
   Color _getCurrentColor(double? current) {
     if (current == null) return Colors.grey;
-    if (current.abs() > 5.0) return Colors.red;
-    if (current.abs() > 2.0) return Colors.orange;
-    return Colors.green;
+    if (current.abs() > 5.0) return SHColors.chartWarning;
+    if (current.abs() > 2.0) return SHColors.chartAccent;
+    return SHColors.chartSecondary;
   }
 
   Color _getSOCColor(double? soc) {
     if (soc == null) return Colors.grey;
-    if (soc > 80) return Colors.green;
-    if (soc > 50) return Colors.blue;
-    if (soc > 20) return Colors.orange;
-    return Colors.red;
+    if (soc > 80) return SHColors.chartSecondary;
+    if (soc > 50) return SHColors.chartPrimary;
+    if (soc > 20) return SHColors.chartAccent;
+    return SHColors.chartWarning;
   }
 
   Color _getSOHColor(double? soh) {
     if (soh == null) return Colors.grey;
-    if (soh > 90) return Colors.green;
-    if (soh > 70) return Colors.orange;
-    return Colors.red;
+    if (soh > 90) return SHColors.chartSecondary;
+    if (soh > 70) return SHColors.chartAccent;
+    return SHColors.chartWarning;
   }
 
   String _formatTimestamp(DateTime timestamp) {

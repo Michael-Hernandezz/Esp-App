@@ -4,9 +4,7 @@ import '../auth/auth.dart';
 import '../auth/auth_di.dart';
 import '../home/presentation/screens/home_screen.dart';
 import '../dashboard/presentation/screens/enhanced_dashboard_screen.dart';
-import '../automations/presentation/screens/automations_screen.dart';
 import '../notifications/presentation/screens/notifications_screen.dart';
-import '../history/presentation/screens/history_screen.dart';
 import '../settings/presentation/screens/settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -155,20 +153,32 @@ class MainAppNavigation extends StatefulWidget {
 class _MainAppNavigationState extends State<MainAppNavigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const EnhancedDashboardScreen(),
-    const AutomationsScreen(),
-    const NotificationsScreen(),
-    const HistoryScreen(),
-    const SettingsScreen(),
-  ];
+  void _handleRefresh() {
+    // Funcionalidad de refresh para el dashboard
+    if (_currentIndex == 1) {
+      // Aquí puedes agregar la lógica de refresh específica del dashboard
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Actualizando datos...')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      const HomeScreen(),
+      Builder(
+        builder: (context) => const EnhancedDashboardScreen(),
+      ), // Dashboard sin AppBar duplicado
+      const NotificationsScreen(),
+      const SettingsScreen(),
+    ];
+
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
-      body: _screens[_currentIndex],
+      drawer: _currentIndex == 1 ? null : null, // Sin drawer para Dashboard (índice 1)
+      endDrawer: null, // Sin drawer derecho
+      body: screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -183,16 +193,8 @@ class _MainAppNavigationState extends State<MainAppNavigation> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.auto_awesome),
-            label: 'Automatización',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notificaciones',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Historial',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

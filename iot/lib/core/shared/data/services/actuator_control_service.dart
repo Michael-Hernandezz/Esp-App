@@ -23,7 +23,8 @@ class ActuatorControlService {
       if (cpEnable != null) payload['cp_enable'] = cpEnable;
       if (pmonEnable != null) payload['pmon_enable'] = pmonEnable;
 
-      print('Enviando comando de actuadores: $payload');
+      print('🚀 ENVIANDO COMANDO ACTUADORES: $payload');
+      print('🌐 URL: $_apiUrl/actuators/control');
 
       final response = await http.post(
         Uri.parse('$_apiUrl/actuators/control'),
@@ -31,13 +32,13 @@ class ActuatorControlService {
         body: jsonEncode(payload),
       );
 
-      print(
-        'Respuesta del servidor: ${response.statusCode} - ${response.body}',
-      );
+      print('📡 Respuesta del servidor: ${response.statusCode}');
+      print('📄 Body de respuesta: ${response.body}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         print('Comando enviado exitosamente: ${result['payload']}');
+        print('Estados escritos a InfluxDB: MQTT + Persistencia directa');
         return true;
       } else {
         print(
@@ -151,23 +152,32 @@ class ActuatorControlService {
 
   /// Control del CHG (carga)
   static Future<bool> controlCharger(String deviceId, bool enable) async {
-    return await controlActuators(
+    print('🔋 Controlando CHARGER: deviceId=$deviceId, enable=$enable');
+    final result = await controlActuators(
       deviceId: deviceId,
       chgEnable: enable ? 1 : 0,
     );
+    print('🔋 Resultado CHARGER: $result');
+    return result;
   }
 
   /// Control del DSG (descarga)
   static Future<bool> controlDischarger(String deviceId, bool enable) async {
-    return await controlActuators(
+    print('⚡ Controlando DISCHARGER: deviceId=$deviceId, enable=$enable');
+    final result = await controlActuators(
       deviceId: deviceId,
       dsgEnable: enable ? 1 : 0,
     );
+    print('⚡ Resultado DISCHARGER: $result');
+    return result;
   }
 
   /// Control de la bomba de carga (CP)
   static Future<bool> controlChargePump(String deviceId, bool enable) async {
-    return await controlActuators(deviceId: deviceId, cpEnable: enable ? 1 : 0);
+    print('💧 Controlando CHARGE PUMP: deviceId=$deviceId, enable=$enable');
+    final result = await controlActuators(deviceId: deviceId, cpEnable: enable ? 1 : 0);
+    print('💧 Resultado CHARGE PUMP: $result');
+    return result;
   }
 
   /// Control del monitoreo del pack (PMON)
@@ -175,10 +185,13 @@ class ActuatorControlService {
     String deviceId,
     bool enable,
   ) async {
-    return await controlActuators(
+    print('📊 Controlando PACK MONITORING: deviceId=$deviceId, enable=$enable');
+    final result = await controlActuators(
       deviceId: deviceId,
       pmonEnable: enable ? 1 : 0,
     );
+    print('📊 Resultado PACK MONITORING: $result');
+    return result;
   }
 
   /// Obtiene los nombres legibles de los actuadores

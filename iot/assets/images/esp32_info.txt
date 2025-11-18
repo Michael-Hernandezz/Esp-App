@@ -1,0 +1,4 @@
+# ESP32 Image
+Esta imagen será reemplazada por una imagen real de ESP32.
+
+La imagen debería mostrarse como una placa ESP32 con componentes electrónicos.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot/core/core.dart';
+import '../../../auth/auth.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -19,34 +20,6 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionTitle(context, 'General'),
-            _buildSettingsCard(context, [
-              _buildSettingItem(
-                context,
-                icon: Icons.language,
-                title: 'Idioma',
-                subtitle: 'Español',
-                onTap: () => _showLanguageDialog(context),
-              ),
-              _buildSettingItem(
-                context,
-                icon: Icons.palette,
-                title: 'Tema',
-                subtitle: 'Oscuro',
-                onTap: () => _showThemeDialog(context),
-              ),
-              _buildSettingItem(
-                context,
-                icon: Icons.vibration,
-                title: 'Vibraciones',
-                subtitle: 'Activadas',
-                trailing: Switch(
-                  value: true,
-                  onChanged: (value) {},
-                  activeThumbColor: SHColors.selectedColor,
-                ),
-              ),
-            ]),
             const SizedBox(height: 24),
             _buildSectionTitle(context, 'Notificaciones'),
             _buildSettingsCard(context, [
@@ -129,31 +102,6 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Cerrar sesión',
                 subtitle: 'Salir de la aplicación',
                 onTap: () => _showLogoutDialog(context),
-              ),
-            ]),
-            const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Información'),
-            _buildSettingsCard(context, [
-              _buildSettingItem(
-                context,
-                icon: Icons.info,
-                title: 'Acerca de',
-                subtitle: 'Versión 1.0.0',
-                onTap: () => _showAboutDialog(context),
-              ),
-              _buildSettingItem(
-                context,
-                icon: Icons.help,
-                title: 'Ayuda y soporte',
-                subtitle: 'Centro de ayuda',
-                onTap: () => _showHelpDialog(context),
-              ),
-              _buildSettingItem(
-                context,
-                icon: Icons.privacy_tip,
-                title: 'Política de privacidad',
-                subtitle: 'Términos y condiciones',
-                onTap: () => _showPrivacyDialog(context),
               ),
             ]),
             const SizedBox(height: 32),
@@ -262,131 +210,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: SHColors.cardColor,
-        title: const Text(
-          'Seleccionar idioma',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text(
-                'Español',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: Radio<String>(
-                value: 'es',
-                groupValue: 'es',
-                onChanged: (value) {},
-                activeColor: SHColors.selectedColor,
-              ),
-            ),
-            ListTile(
-              title: const Text(
-                'English',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: Radio<String>(
-                value: 'en',
-                groupValue: 'es',
-                onChanged: (value) {},
-                activeColor: SHColors.selectedColor,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancelar',
-              style: TextStyle(color: Colors.grey.shade400),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Aplicar',
-              style: TextStyle(color: SHColors.selectedColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showThemeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: SHColors.cardColor,
-        title: const Text(
-          'Seleccionar tema',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text(
-                'Oscuro',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: Radio<String>(
-                value: 'dark',
-                groupValue: 'dark',
-                onChanged: (value) {},
-                activeColor: SHColors.selectedColor,
-              ),
-            ),
-            ListTile(
-              title: const Text('Claro', style: TextStyle(color: Colors.white)),
-              leading: Radio<String>(
-                value: 'light',
-                groupValue: 'dark',
-                onChanged: (value) {},
-                activeColor: SHColors.selectedColor,
-              ),
-            ),
-            ListTile(
-              title: const Text(
-                'Sistema',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: Radio<String>(
-                value: 'system',
-                groupValue: 'dark',
-                onChanged: (value) {},
-                activeColor: SHColors.selectedColor,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancelar',
-              style: TextStyle(color: Colors.grey.shade400),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Aplicar',
-              style: TextStyle(color: SHColors.selectedColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showTimeRangeDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -450,99 +273,16 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: SHColors.cardColor,
-        title: const Text(
-          'Acerca de Smart Home',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Smart Home App v1.0.0\n\n'
-          'Una aplicación moderna para el control inteligente de tu hogar.\n\n'
-          'Desarrollado con Flutter.',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cerrar',
-              style: TextStyle(color: SHColors.selectedColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showHelpDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: SHColors.cardColor,
-        title: const Text(
-          'Ayuda y soporte',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Si necesitas ayuda o tienes alguna pregunta:\n\n'
-          '• Visita nuestro centro de ayuda\n'
-          '• Envía un email a soporte@smarthome.com\n'
-          '• Llama al +1-800-SMART-HOME',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cerrar',
-              style: TextStyle(color: SHColors.selectedColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPrivacyDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: SHColors.cardColor,
-        title: const Text(
-          'Política de privacidad',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Tu privacidad es importante para nosotros.\n\n'
-          'Esta aplicación recopila únicamente los datos necesarios para su funcionamiento.\n\n'
-          'Para más información, visita nuestra política de privacidad completa.',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cerrar',
-              style: TextStyle(color: SHColors.selectedColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _navigateToEvidence(BuildContext context) {
     Navigator.pushNamed(context, '/evidence');
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final authNotifier = AuthProvider.of(context);
+    
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: SHColors.cardColor,
         title: const Text(
           'Cerrar sesión',
@@ -554,7 +294,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(
               'Cancelar',
               style: TextStyle(color: Colors.grey.shade400),
@@ -562,8 +302,9 @@ class SettingsScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              // Aquí puedes agregar la lógica para cerrar sesión
+              Navigator.of(dialogContext).pop();
+              // Usar el authNotifier capturado fuera del diálogo
+              authNotifier?.logout();
             },
             child: const Text(
               'Cerrar sesión',

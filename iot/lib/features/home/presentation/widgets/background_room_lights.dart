@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ui_common/ui_common.dart';
 
-import '../../../../core/core.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/theme/sh_colors.dart';
+import 'package:iot/core/theme/sh_icons.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_divider.dart';
+import 'package:iot/core/shared/presentation/widgets/blue_dot_light.dart';
 
 class BackgroundRoomCard extends StatelessWidget {
   const BackgroundRoomCard({

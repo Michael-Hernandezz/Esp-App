@@ -1,4 +1,4 @@
-import os, json
+import os, json, time
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -17,7 +17,8 @@ INFLUX_TOKEN = os.getenv("INFLUX_TOKEN", "")
 INFLUX_ORG = os.getenv("INFLUX_ORG", "microgrid")
 INFLUX_BUCKET = os.getenv("INFLUX_BUCKET", "telemetry")
 
-from influxdb_client import InfluxDBClient
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
 
 app = FastAPI(title="Microgrid API")
 
@@ -138,6 +139,8 @@ class ActuatorCommand(BaseModel):
 @app.post("/actuators/control")
 async def control_actuators(cmd: ActuatorCommand):
     """Controla los actuadores del sistema BMS"""
+    print(f"🎮 Control BMS recibido: {cmd.device_id} - {cmd.dict()}")
+    
     topic = f"{MQTT_BASE}/{cmd.device_id}/cmd"
     
     # Solo envía campos que no sean None
@@ -154,8 +157,16 @@ async def control_actuators(cmd: ActuatorCommand):
     if not payload:
         raise HTTPException(400, "Al menos un actuador debe especificarse")
     
+    print(f"📡 Enviando MQTT a {topic}: {payload}")
+    
+    # 1. Enviar comando MQTT al ESP32
     async with aiomqtt.Client(MQTT_HOST, port=MQTT_PORT, username=MQTT_USER, password=MQTT_PASS) as client:
         await client.publish(topic, json.dumps(payload).encode(), qos=1, retain=False)
+    
+    print(f"✅ MQTT enviado exitosamente")
+    
+    # 2. Escribir inmediatamente a InfluxDB para persistencia garantizada
+    await _write_actuator_states_to_influx(cmd.device_id, payload)
     
     return {"published": True, "topic": topic, "payload": payload}
 
@@ -163,22 +174,88 @@ async def control_actuators(cmd: ActuatorCommand):
 def get_actuator_status(device_id: str):
     """Obtiene el estado actual de todos los actuadores"""
     try:
-        flux = f'''
+        print(f"🔍 Obteniendo estado de actuadores para device: {device_id}")
+        
+        # Obtener el estado más reciente de cada actuador individualmente
+        actuator_fields = ["chg_enable", "dsg_enable", "cp_enable", "pmon_enable"]
+        status = {}
+        
+        for field in actuator_fields:
+            try:
+                flux = f'''
 from(bucket: "{INFLUX_BUCKET}")
-  |> range(start: -5m)
-  |> filter(fn: (r) => r._measurement == "telemetry" and r.device_id == "{device_id}")
-  |> filter(fn: (r) => contains(value: r._field, set: ["chg_enable", "dsg_enable", "cp_enable", "pmon_enable"]))
+  |> range(start: -24h)
+  |> filter(fn: (r) => r._measurement == "telemetry" and r.device_id == "{device_id}" and r._field == "{field}")
   |> last()
   |> keep(columns: ["_time","_value","_field"])
 '''
-        tables = _query_influx(flux)
-        status = {}
-        for table in tables:
-            for rec in table.records:
-                field = rec.values.get("_field")
-                value = int(rec.get_value())
-                status[field] = value
+                print(f"🔍 Consultando {field}...")
+                
+                tables = _query_influx(flux)
+                
+                for table in tables:
+                    for rec in table.records:
+                        value = rec.get_value()
+                        if value is not None:
+                            status[field] = int(float(value))
+                            print(f"✅ {field} = {status[field]}")
+                            break
+            except Exception as e:
+                print(f"❌ Error consultando {field}: {e}")
+                status[field] = 0  # Valor por defecto
+        
+        print(f"🎯 Estado final de actuadores: {status}")
+        
+        # Si no hay estados, usar valores por defecto
+        if not status:
+            print("⚠️ No se encontraron estados en InfluxDB, usando valores por defecto")
+            status = {
+                "chg_enable": 0,
+                "dsg_enable": 0, 
+                "cp_enable": 0,
+                "pmon_enable": 0
+            }
         
         return {"device_id": device_id, "actuators": status}
+        
     except Exception as e:
+        print(f"❌ Error obteniendo estado de actuadores: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(500, f"Error obteniendo estado de actuadores: {e}")
+
+async def _write_actuator_states_to_influx(device_id: str, payload: dict):
+    """Escribe los estados de actuadores directamente a InfluxDB para garantizar persistencia"""
+    if not INFLUX_TOKEN:
+        print("INFLUX_TOKEN no configurado - saltando escritura a InfluxDB")
+        return
+    
+    try:
+        print(f"🔥 Iniciando escritura a InfluxDB para {device_id}: {payload}")
+        
+        with InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG) as client:
+            write_api = client.write_api(write_options=SYNCHRONOUS)
+            
+            # Crear puntos de datos para cada actuador en el payload
+            points = []
+            current_time = time.time_ns()
+            
+            for field_name, value in payload.items():
+                point = (
+                    Point("telemetry")
+                    .tag("device_id", device_id)
+                    .field(field_name, float(value))  # Usar float para compatibilidad con InfluxDB
+                    .time(current_time)
+                )
+                points.append(point)
+                print(f"✅ Punto creado: {device_id}.{field_name} = {value}")
+            
+            # Escribir todos los puntos
+            write_api.write(bucket=INFLUX_BUCKET, record=points)
+            print(f"🎉 Estados BMS escritos EXITOSAMENTE a InfluxDB para {device_id}")
+            
+    except Exception as e:
+        print(f"❌ ERROR escribiendo a InfluxDB: {e}")
+        import traceback
+        traceback.print_exc()
+        # No lanzar excepción - el comando MQTT ya fue enviado correctamente

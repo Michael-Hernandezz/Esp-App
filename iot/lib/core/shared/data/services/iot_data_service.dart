@@ -32,7 +32,7 @@ class IoTDataService {
       deviceMap.forEach((deviceId, deviceData) {
         final sensorData = IoTSensorData.fromSensorReadings(
           deviceId: deviceId,
-          roomName: deviceId.toUpperCase().replaceAll('_', ' '),
+          roomName: _getDeviceName(deviceId),
           readings: deviceData,
         );
 
@@ -41,7 +41,7 @@ class IoTDataService {
           final room = SmartRoom(
             id: deviceId,
             name: sensorData.roomName,
-            imageUrl: 'assets/images/0.jpeg', // Imagen por defecto
+            imageUrl: _getDeviceImage(deviceId),
             temperature:
                 sensorData.vBatConv ??
                 20.0, // Usar voltaje de batería como "temperatura" para compatibilidad
@@ -110,31 +110,67 @@ class IoTDataService {
           .map((r) => r.deviceId)
           .toSet();
 
-      return {
+      // Crear mapa base con datos del sistema
+      final Map<String, dynamic> systemStats = {
         'total_devices': uniqueDevices.length,
         'active_devices': activeDevices.length,
         'last_update': latestData.isNotEmpty
             ? latestData.values.first.timestamp
             : DateTime.now(),
-        'avg_battery_voltage': latestData.containsKey('v_bat_conv')
-            ? latestData['v_bat_conv']!.value
-            : 0.0,
-        'avg_output_voltage': latestData.containsKey('v_out_conv')
-            ? latestData['v_out_conv']!.value
-            : 0.0,
-        'avg_current': latestData.containsKey('i_circuit')
-            ? latestData['i_circuit']!.value
-            : 0.0,
-        'avg_soc': latestData.containsKey('soc_percent')
-            ? latestData['soc_percent']!.value
-            : 0.0,
-        'avg_soh': latestData.containsKey('soh_percent')
-            ? latestData['soh_percent']!.value
-            : 0.0,
-        'system_status': latestData.containsKey('status')
-            ? latestData['status']!.valueAsString
-            : 'unknown',
       };
+
+      // Agregar datos de sensores específicos
+      if (latestData.containsKey('v_bat_conv')) {
+        systemStats['avg_battery_voltage'] = latestData['v_bat_conv']!.value;
+      } else {
+        systemStats['avg_battery_voltage'] = 0.0;
+      }
+
+      if (latestData.containsKey('v_out_conv')) {
+        systemStats['avg_output_voltage'] = latestData['v_out_conv']!.value;
+      } else {
+        systemStats['avg_output_voltage'] = 0.0;
+      }
+
+      if (latestData.containsKey('i_circuit')) {
+        systemStats['avg_current'] = latestData['i_circuit']!.value;
+      } else {
+        systemStats['avg_current'] = 0.0;
+      }
+
+      if (latestData.containsKey('soc_percent')) {
+        systemStats['avg_soc'] = latestData['soc_percent']!.value;
+      } else {
+        systemStats['avg_soc'] = 0.0;
+      }
+
+      if (latestData.containsKey('soh_percent')) {
+        systemStats['avg_soh'] = latestData['soh_percent']!.value;
+      } else {
+        systemStats['avg_soh'] = 0.0;
+      }
+
+      if (latestData.containsKey('status')) {
+        systemStats['system_status'] = latestData['status']!.valueAsString;
+      } else {
+        systemStats['system_status'] = 'unknown';
+      }
+
+      // *** AGREGAR ESTADOS BMS PARA PERSISTENCIA ***
+      if (latestData.containsKey('chg_enable')) {
+        systemStats['chg_enable'] = latestData['chg_enable']!.value.round();
+      }
+      if (latestData.containsKey('dsg_enable')) {
+        systemStats['dsg_enable'] = latestData['dsg_enable']!.value.round();
+      }
+      if (latestData.containsKey('cp_enable')) {
+        systemStats['cp_enable'] = latestData['cp_enable']!.value.round();
+      }
+      if (latestData.containsKey('pmon_enable')) {
+        systemStats['pmon_enable'] = latestData['pmon_enable']!.value.round();
+      }
+
+      return systemStats;
     } catch (e) {
       print('Error obteniendo estadísticas: $e');
       return {
@@ -148,6 +184,28 @@ class IoTDataService {
         'avg_soh': 0.0,
         'system_status': 'error',
       };
+    }
+  }
+
+  /// Convierte el deviceId a un nombre más amigable
+  static String _getDeviceName(String deviceId) {
+    switch (deviceId.toLowerCase()) {
+      case 'test-device':
+      case 'test_device':
+        return 'DEV-001';
+      default:
+        return deviceId.toUpperCase().replaceAll('_', ' ');
+    }
+  }
+
+  /// Asigna la imagen correspondiente según el tipo de dispositivo
+  static String _getDeviceImage(String deviceId) {
+    switch (deviceId.toLowerCase()) {
+      case 'test-device':
+      case 'test_device':
+        return 'assets/images/4.jpeg'; // Imagen diferente para ESP32/dispositivo IoT
+      default:
+        return 'assets/images/0.jpeg'; // Imagen por defecto
     }
   }
 }

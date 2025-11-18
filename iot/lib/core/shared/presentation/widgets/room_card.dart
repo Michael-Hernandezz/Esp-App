@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:iot/features/home/presentation/widgets/background_room_lights.dart';
 import 'package:ui_common/ui_common.dart';
 
-import '../../../../features/smart_room/screens/room_details_screen.dart';
-import '../../../core.dart';
-import 'shimmer_arrows.dart';
+import 'package:iot/features/smart_room/screens/room_details_screen.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/theme/sh_colors.dart';
+import 'package:iot/core/theme/sh_icons.dart';
+import 'package:iot/core/shared/presentation/widgets/parallax_image_card.dart';
+import 'package:iot/core/shared/presentation/widgets/shimmer_arrows.dart';
 
 class RoomCard extends StatelessWidget {
   const RoomCard({

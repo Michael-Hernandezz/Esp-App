@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:iot/core/core.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/theme/sh_colors.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_app_bar.dart';
+import 'package:iot/core/shared/presentation/widgets/parallax_image_card.dart';
 import 'package:ui_common/ui_common.dart';
 
 import '../../../core/shared/presentation/widgets/room_card.dart';

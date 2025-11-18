@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import '../../../../core/theme/sh_colors.dart';
 
 /// Widget avanzado de gráficas para IoT con múltiples tipos de visualización
 class IoTAdvancedChartWidget extends StatefulWidget {
@@ -92,11 +93,29 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     final now = DateTime.now();
     final dataPoints = <IoTDataPoint>[];
 
-    final baseValue = widget.measurement == 'temp'
-        ? 22.0
-        : widget.measurement == 'v'
-        ? 12.0
-        : 2.5;
+    // Determinar el valor base según el tipo de medición
+    double baseValue;
+    switch (widget.measurement) {
+      case 'temp':
+        baseValue = 22.0;
+        break;
+      case 'v':
+        baseValue = 12.0;
+        break;
+      case 'v_bat_conv':
+        baseValue = 24.0; // Voltaje típico de batería
+        break;
+      case 'v_out_conv':
+        baseValue = 12.0; // Voltaje típico de salida
+        break;
+      case 'i_circuit':
+        baseValue = 2.5; // Corriente típica
+        break;
+      default:
+        baseValue = widget.minThreshold != null && widget.maxThreshold != null
+            ? (widget.minThreshold! + widget.maxThreshold!) / 2
+            : 2.5;
+    }
 
     for (int i = 50; i >= 0; i--) {
       final timestamp = now.subtract(Duration(minutes: i * 5));
@@ -111,8 +130,18 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
           value = baseValue + dayPattern + (random.nextDouble() - 0.5) * 3;
           break;
         case 'v':
-          // Voltaje con pequeñas fluctuaciones
-          value = baseValue + (random.nextDouble() - 0.5) * 0.5;
+        case 'v_bat_conv':
+        case 'v_out_conv':
+          // Voltaje con pequeñas fluctuaciones realistas
+          value = baseValue + (random.nextDouble() - 0.5) * 1.0;
+          // Asegurar que esté dentro del rango esperado
+          if (widget.minThreshold != null && widget.maxThreshold != null) {
+            value = value.clamp(widget.minThreshold!, widget.maxThreshold!);
+          }
+          break;
+        case 'i_circuit':
+          // Corriente con fluctuaciones
+          value = baseValue + (random.nextDouble() - 0.5) * 1.0;
           break;
         default:
           value = baseValue + (random.nextDouble() - 0.5) * 2;
@@ -140,15 +169,16 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: SHColors.cardColor, // Fondo oscuro
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [widget.primaryColor.withOpacity(0.05), Colors.transparent],
+          color: SHColors.cardColor,
+          border: Border.all(
+            color: widget.primaryColor.withOpacity(0.2),
+            width: 1,
           ),
         ),
         child: Padding(
@@ -196,14 +226,17 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 widget.title,
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               if (widget.deviceId != null)
                 Text(
                   'Sensor ${widget.deviceId}',
                   style: Theme.of(
                     context,
-                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[300]),
                 ),
             ],
           ),
@@ -216,7 +249,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 width: 12,
                 height: 12,
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(
+                  color: SHColors.chartSecondary.withOpacity(
                     0.3 + _pulseController.value * 0.7,
                   ),
                   shape: BoxShape.circle,
@@ -226,7 +259,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                     width: 6,
                     height: 6,
                     decoration: const BoxDecoration(
-                      color: Colors.green,
+                      color: SHColors.chartSecondary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -253,12 +286,19 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: widget.primaryColor.withOpacity(0.1),
+        color: SHColors.backgroundColor.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: widget.primaryColor.withOpacity(0.3),
+          color: widget.primaryColor.withOpacity(0.4),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -268,7 +308,9 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               children: [
                 Text(
                   'Valor Actual',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[300],
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -382,6 +424,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         return _buildBarChart();
       case IoTChartType.gauge:
         return _buildGaugeChart();
+      case IoTChartType.pie:
+        return _buildPieChart();
     }
   }
 
@@ -398,13 +442,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               verticalInterval: null,
               getDrawingHorizontalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.white.withOpacity(0.1),
                   strokeWidth: 1,
                 );
               },
               getDrawingVerticalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.white.withOpacity(0.05),
                   strokeWidth: 1,
                 );
               },
@@ -429,7 +473,9 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                         axisSide: meta.axisSide,
                         child: Text(
                           '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}',
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[300],
+                          ),
                         ),
                       );
                     }
@@ -445,7 +491,9 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   getTitlesWidget: (double value, TitleMeta meta) {
                     return Text(
                       '${value.toInt()}${widget.unit}',
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[300],
+                      ),
                     );
                   },
                 ),
@@ -467,7 +515,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 }).toList(),
                 isCurved: true,
                 color: widget.primaryColor,
-                barWidth: 3,
+                barWidth: 4,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
                   show: true,
@@ -475,17 +523,17 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                     final quality = _data[index].quality;
                     Color dotColor = widget.primaryColor;
                     if (quality == IoTDataQuality.critical) {
-                      dotColor = Colors.red;
+                      dotColor = SHColors.chartWarning;
                     }
                     if (quality == IoTDataQuality.warning) {
-                      dotColor = Colors.orange;
+                      dotColor = SHColors.chartAccent;
                     }
 
                     return FlDotCirclePainter(
                       radius: 4,
                       color: dotColor,
                       strokeWidth: 2,
-                      strokeColor: Colors.white,
+                      strokeColor: SHColors.cardColor,
                     );
                   },
                 ),
@@ -493,8 +541,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      widget.primaryColor.withOpacity(0.3),
-                      widget.primaryColor.withOpacity(0.05),
+                      widget.primaryColor.withOpacity(0.15),
+                      widget.primaryColor.withOpacity(0.02),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -507,14 +555,14 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 if (widget.minThreshold != null)
                   HorizontalLine(
                     y: widget.minThreshold!,
-                    color: Colors.red.withOpacity(0.8),
+                    color: SHColors.chartWarning.withOpacity(0.8),
                     strokeWidth: 2,
                     dashArray: [5, 5],
                   ),
                 if (widget.maxThreshold != null)
                   HorizontalLine(
                     y: widget.maxThreshold!,
-                    color: Colors.orange.withOpacity(0.8),
+                    color: SHColors.chartAccent.withOpacity(0.8),
                     strokeWidth: 2,
                     dashArray: [5, 5],
                   ),
@@ -625,9 +673,300 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     );
   }
 
+  Widget _buildPieChart() {
+    if (_data.isEmpty) return const SizedBox.shrink();
+
+    final currentValue = _data.last.value;
+    final maxValue = widget.maxThreshold ?? 100.0;
+    final minValue = widget.minThreshold ?? 0.0;
+    
+    // Calcular porcentaje del valor actual
+    final normalizedValue = ((currentValue - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
+    final currentPercentage = normalizedValue * 100;
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D1117),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: widget.primaryColor.withOpacity(0.1),
+                blurRadius: 20,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // Gauge completamente personalizado sin elementos adicionales
+              SizedBox(
+                height: 200,
+                width: 280,
+                child: CustomPaint(
+                  painter: CleanGaugePainter(
+                    value: normalizedValue * _animationController.value,
+                    minValue: minValue,
+                    maxValue: maxValue,
+                    currentValue: currentValue,
+                    unit: widget.unit,
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Valor principal destacado
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0D1117),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: _getGaugeColor(normalizedValue),
+                    width: 3,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getGaugeColor(normalizedValue).withOpacity(0.3),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      currentValue.toStringAsFixed(1),
+                      style: TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.w800,
+                        color: _getGaugeColor(normalizedValue),
+                        letterSpacing: -2,
+                        shadows: [
+                          Shadow(
+                            color: _getGaugeColor(normalizedValue).withOpacity(0.5),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      widget.unit,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: _getGaugeColor(normalizedValue).withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Información del estado y rango
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D1117),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: const Color(0xFF30363D),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Estado',
+                            style: const TextStyle(
+                              color: Color(0xFFA5A5A5),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _getStatusText(currentValue, minValue, maxValue),
+                            style: TextStyle(
+                              color: _getGaugeColor(normalizedValue),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              shadows: [
+                                Shadow(
+                                  color: _getGaugeColor(normalizedValue).withOpacity(0.3),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D1117),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: const Color(0xFF30363D),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Progreso',
+                            style: const TextStyle(
+                              color: Color(0xFFA5A5A5),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${currentPercentage.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: _getGaugeColor(normalizedValue),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              shadows: [
+                                Shadow(
+                                  color: _getGaugeColor(normalizedValue).withOpacity(0.3),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Color _getGaugeColor(double normalizedValue) {
+    if (normalizedValue < 0.2) return const Color(0xFFFF4444); // Rojo
+    if (normalizedValue < 0.4) return const Color(0xFFFF8800); // Naranja  
+    if (normalizedValue < 0.7) return const Color(0xFFFFDD00); // Amarillo
+    if (normalizedValue < 0.9) return const Color(0xFF88DD00); // Verde claro
+    return const Color(0xFF00DD44); // Verde
+  }
+
   Widget _buildStatistics() {
     if (_data.isEmpty) return const SizedBox.shrink();
 
+    // Si es gráfica pie, mostrar información de rango simplificada
+    if (widget.chartType == IoTChartType.pie) {
+      final currentValue = _data.last.value;
+      final maxValue = widget.maxThreshold ?? 100.0;
+      final minValue = widget.minThreshold ?? 0.0;
+      
+      return Container(
+        margin: const EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1117),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: const Color(0xFF21262D),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rango',
+                  style: const TextStyle(
+                    color: Color(0xFF8B949E),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${minValue.toStringAsFixed(0)} - ${maxValue.toStringAsFixed(0)}${widget.unit}',
+                  style: const TextStyle(
+                    color: Color(0xFFF0F6FC),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: 1,
+              height: 30,
+              color: const Color(0xFF21262D),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Estado',
+                  style: const TextStyle(
+                    color: Color(0xFF8B949E),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _getStatusText(currentValue, minValue, maxValue),
+                  style: TextStyle(
+                    color: _getStatusColor(currentValue, minValue, maxValue),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Para otros tipos de gráfica, mostrar estadísticas normales
     final values = _data.map((e) => e.value).toList();
     final avg = values.reduce((a, b) => a + b) / values.length;
     final min = values.reduce(math.min);
@@ -648,7 +987,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: _buildStatCard('Máximo', max.toStringAsFixed(1), Colors.red),
+          child: _buildStatCard('Máximo', max.toStringAsFixed(1), SHColors.chartWarning),
         ),
       ],
     );
@@ -736,12 +1075,28 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   Color _getColorForQuality(IoTDataQuality quality) {
     switch (quality) {
       case IoTDataQuality.critical:
-        return Colors.red;
+        return SHColors.chartWarning;
       case IoTDataQuality.warning:
-        return Colors.orange;
+        return SHColors.chartAccent;
       case IoTDataQuality.normal:
         return widget.primaryColor;
     }
+  }
+
+  String _getStatusText(double value, double min, double max) {
+    final percentage = ((value - min) / (max - min)) * 100;
+    if (percentage < 20) return 'Bajo';
+    if (percentage < 40) return 'Normal';
+    if (percentage < 80) return 'Bueno';
+    return 'Óptimo';
+  }
+
+  Color _getStatusColor(double value, double min, double max) {
+    final percentage = ((value - min) / (max - min)) * 100;
+    if (percentage < 20) return const Color(0xFFFF6B6B); // Rojo
+    if (percentage < 40) return const Color(0xFFFFA726); // Naranja
+    if (percentage < 80) return const Color(0xFF00D9FF); // Azul
+    return const Color(0xFF4CAF50); // Verde
   }
 }
 
@@ -760,15 +1115,135 @@ class IoTDataPoint {
 
 enum IoTDataQuality { normal, warning, critical }
 
-enum IoTChartType { line, bar, gauge }
+enum IoTChartType { line, bar, gauge, pie }
 
 enum IoTTimeRange {
   last1Hour('1h'),
+  last3Hours('3h'),
   last6Hours('6h'),
-  last24Hours('24h'),
-  last7Days('7d'),
-  last30Days('30d');
+  last12Hours('12h'),
+  last24Hours('24h');
 
   const IoTTimeRange(this.label);
   final String label;
+}
+
+class CleanGaugePainter extends CustomPainter {
+  final double value; // 0.0 to 1.0
+  final double minValue;
+  final double maxValue;
+  final double currentValue;
+  final String unit;
+
+  CleanGaugePainter({
+    required this.value,
+    required this.minValue,
+    required this.maxValue,
+    required this.currentValue,
+    required this.unit,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height * 0.75);
+    final radius = math.min(size.width, size.height) * 0.32;
+
+    // Dibujar solo el arco de fondo limpio
+    final backgroundPaint = Paint()
+      ..color = const Color(0xFF1C2128)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 18
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      math.pi,
+      math.pi,
+      false,
+      backgroundPaint,
+    );
+
+    // Dibujar segmentos de colores limpios
+    final segments = [
+      const Color(0xFFE53E3E), // Rojo 
+      const Color(0xFFFF8C00), // Naranja
+      const Color(0xFFECC94B), // Amarillo
+      const Color(0xFF68D391), // Verde claro
+      const Color(0xFF38A169), // Verde
+    ];
+    
+    double startAngle = math.pi;
+    const totalAngle = math.pi;
+
+    for (int i = 0; i < segments.length; i++) {
+      final segmentAngle = totalAngle / segments.length;
+      final paint = Paint()
+        ..color = segments[i]
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 18
+        ..strokeCap = StrokeCap.round;
+
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        startAngle,
+        segmentAngle,
+        false,
+        paint,
+      );
+      startAngle += segmentAngle;
+    }
+
+    // Dibujar aguja limpia sin elementos adicionales
+    final needleAngle = math.pi + (value * math.pi);
+    final needleLength = radius * 0.75;
+    final needleEnd = Offset(
+      center.dx + needleLength * math.cos(needleAngle),
+      center.dy + needleLength * math.sin(needleAngle),
+    );
+
+    // Aguja principal blanca brillante
+    final needlePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(center, needleEnd, needlePaint);
+
+    // Centro de la aguja
+    final centerPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(center, 6, centerPaint);
+
+    // Dibujar etiquetas mínimas y limpias
+    _drawCleanLabels(canvas, size, center, radius);
+  }
+
+  void _drawCleanLabels(Canvas canvas, Size size, Offset center, double radius) {
+    final textStyle = TextStyle(
+      color: Colors.white.withOpacity(0.8),
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+    );
+
+    // Solo etiquetas mínima y máxima
+    final minPainter = TextPainter(
+      text: TextSpan(text: minValue.toInt().toString(), style: textStyle),
+      textDirection: TextDirection.ltr,
+    );
+    minPainter.layout();
+    minPainter.paint(canvas, Offset(center.dx - radius - 20, center.dy + 10));
+
+    final maxPainter = TextPainter(
+      text: TextSpan(text: maxValue.toInt().toString(), style: textStyle),
+      textDirection: TextDirection.ltr,
+    );
+    maxPainter.layout();
+    maxPainter.paint(canvas, Offset(center.dx + radius - 10, center.dy + 10));
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

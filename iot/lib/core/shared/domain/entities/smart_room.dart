@@ -58,7 +58,7 @@ class SmartRoom {
 
 final _room = SmartRoom(
   id: '1',
-  name: 'LIVING ROOM',
+  name: 'DEV-001',
   imageUrl: _imagesUrls[0],
   temperature: 12,
   airHumidity: 23,
@@ -69,9 +69,9 @@ final _room = SmartRoom(
 );
 
 const _imagesUrls = [
-  'assets/images/0.jpeg',
+  'assets/images/esp32.jpeg', // Imagen ESP32 para DEV-001
   'assets/images/1.jpeg',
   'assets/images/2.jpeg',
-  'assets/images/3.jpeg',
   'assets/images/4.jpeg',
+  'assets/images/0.jpeg',
 ];

@@ -24,27 +24,40 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+    
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(height: 48),
-                    _buildLoginForm(),
-                    const SizedBox(height: 24),
-                    _buildLoginButton(),
-                  ],
-                ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 
+                         MediaQuery.of(context).padding.top - 
+                         MediaQuery.of(context).padding.bottom - 48,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildHeader(),
+                        SizedBox(height: isKeyboardVisible ? 24 : 48),
+                        _buildLoginForm(),
+                        SizedBox(height: isKeyboardVisible ? 16 : 24),
+                        _buildLoginButton(),
+                      ],
+                    ),
+                  ),
+                  if (!isKeyboardVisible) _buildFooter(),
+                ],
               ),
-              _buildFooter(),
-            ],
+            ),
           ),
         ),
       ),
@@ -52,34 +65,40 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildHeader() {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+    
     return Column(
       children: [
         Container(
-          width: 120,
-          height: 120,
+          width: isKeyboardVisible ? 80 : 120,
+          height: isKeyboardVisible ? 80 : 120,
           decoration: BoxDecoration(
             color: SHColors.selectedColor.withOpacity(0.2),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             Icons.sensors,
-            size: 60,
+            size: isKeyboardVisible ? 40 : 60,
             color: SHColors.selectedColor,
           ),
         ),
-        const SizedBox(height: 24),
-        const Text(
+        SizedBox(height: isKeyboardVisible ? 16 : 24),
+        Text(
           'IoT Microgrid',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 32,
+            fontSize: isKeyboardVisible ? 28 : 32,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: isKeyboardVisible ? 4 : 8),
         Text(
           'Accede con tus credenciales del dispositivo',
-          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 16),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.7), 
+            fontSize: isKeyboardVisible ? 14 : 16
+          ),
           textAlign: TextAlign.center,
         ),
       ],

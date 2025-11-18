@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/core.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/theme/sh_icons.dart';
+import 'package:iot/core/shared/presentation/providers/room_state_provider.dart';
+import 'package:iot/core/shared/presentation/services/message_service.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_card.dart';
+import 'package:iot/core/shared/presentation/widgets/sh_switcher.dart';
+import 'package:iot/core/shared/presentation/widgets/blue_dot_light.dart';
 
 class LightsAndTimerSwitchers extends StatelessWidget {
   const LightsAndTimerSwitchers({required this.room, super.key});

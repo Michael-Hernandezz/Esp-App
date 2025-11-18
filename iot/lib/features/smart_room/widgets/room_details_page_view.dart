@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ui_common/ui_common.dart';
 
-import '../../../core/core.dart';
+import 'package:iot/core/shared/domain/entities/smart_room.dart';
+import 'package:iot/core/shared/presentation/providers/room_state_provider.dart';
 import 'air_conditiioner_controls_card.dart';
 import 'light_and_time_switcher.dart';
 import 'light_intensity_slide_card.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:iot/core/shared/data/services/iot_data_service.dart';
 import 'package:iot/core/shared/data/services/influxdb_service.dart';
+import '../../../../core/theme/sh_colors.dart';
 
 class SensorChartWidget extends StatefulWidget {
   final String measurement;
@@ -101,11 +102,11 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
+            Icon(Icons.error_outline, size: 48, color: SHColors.chartWarning),
             const SizedBox(height: 8),
             Text(
               'Error cargando datos',
-              style: TextStyle(color: Colors.red[300]),
+              style: TextStyle(color: SHColors.chartWarning),
             ),
             const SizedBox(height: 4),
             Text(

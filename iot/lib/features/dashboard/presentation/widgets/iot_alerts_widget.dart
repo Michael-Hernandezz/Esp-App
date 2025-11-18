@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../../../../core/theme/sh_colors.dart';
 
 /// Widget de alertas IoT en tiempo real
 class IoTAlertsWidget extends StatefulWidget {
@@ -87,6 +88,7 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
 
     return Card(
       elevation: 4,
+      color: SHColors.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,7 +102,7 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
                   builder: (context, child) {
                     return Icon(
                       Icons.warning,
-                      color: Colors.red.withOpacity(
+                      color: SHColors.chartWarning.withOpacity(
                         0.5 + _blinkController.value * 0.5,
                       ),
                       size: 24,
@@ -112,6 +114,7 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
                   'Alertas del Sistema',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 const Spacer(),
@@ -121,13 +124,13 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: SHColors.chartWarning.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${_activeAlerts.length}',
                     style: TextStyle(
-                      color: Colors.red[700],
+                      color: SHColors.chartWarning,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -159,12 +162,13 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
   Widget _buildNoAlertsWidget() {
     return Card(
       elevation: 2,
+      color: SHColors.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.green[600], size: 24),
+            Icon(Icons.check_circle, color: SHColors.chartSecondary, size: 24),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -174,7 +178,7 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
                     'Sistema Operativo',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.green[700],
+                      color: SHColors.chartSecondary,
                     ),
                   ),
                   Text(
