@@ -72,12 +72,15 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - INFLUXDB_URL=influxdb-prod:8086
-      - INFLUXDB_TOKEN=m9dZ53tgCda7obiBCJn4xFVloD8q9zbqckGPvMzlPxJ3Jwb2ur6gGp-sgWD-KjHH5tvJIqgCSvpuVKeOHj66rw==
-      - INFLUXDB_ORG=microgrid
-      - INFLUXDB_BUCKET=telemetry
-      - MQTT_BROKER=mosquitto-prod
+      - INFLUXDB_URL=http://influxdb-prod:8086
+      - INFLUX_TOKEN=m9dZ53tgCda7obiBCJn4xFVloD8q9zbqckGPvMzlPxJ3Jwb2ur6gGp-sgWD-KjHH5tvJIqgCSvpuVKeOHj66rw==
+      - INFLUX_ORG=microgrid
+      - INFLUX_BUCKET=telemetry
+      - MQTT_HOST=mosquitto-prod
       - MQTT_PORT=1883
+      - MQTT_USER=admin
+      - MQTT_PASS=admin12345
+      - MQTT_BASE=microgrid
       - ENVIRONMENT=production
     depends_on:
       influxdb:

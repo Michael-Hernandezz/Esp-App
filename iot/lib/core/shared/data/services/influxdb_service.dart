@@ -22,8 +22,6 @@ class InfluxDBService {
     Duration? timeRange,
   }) async {
     try {
-      print('Iniciando consulta para field: $field');
-
       // Consulta Flux para obtener datos del measurement mqtt_consumer
       final query = deviceId != null
           ? '''
@@ -44,10 +42,6 @@ from(bucket: "$_bucket")
   |> limit(n: 50)
 ''';
 
-      print('Query: $query');
-      print('URL: $_baseUrl/api/v2/query?org=$_org');
-      print('Headers: $_headers');
-
       final response = await http.post(
         Uri.parse('$_baseUrl/api/v2/query?org=$_org'),
         headers: _headers,
@@ -56,16 +50,13 @@ from(bucket: "$_bucket")
 
       if (response.statusCode == 200) {
         final parsedData = _parseInfluxJsonResponse(response.body);
-        if (parsedData.isEmpty) {
-          print('⚠️ No hay datos para el campo: $field');
-        }
         return parsedData;
       } else {
-        print('❌ Error InfluxDB: ${response.statusCode}');
+        print('❌ InfluxDB Error ${response.statusCode}: ${response.body}');
         return [];
       }
     } catch (e) {
-      print('Error al obtener datos de InfluxDB: $e');
+      print('❌ InfluxDB Connection Error: $e');
       return [];
     }
   }
@@ -91,7 +82,6 @@ from(bucket: "$_bucket")
       ];
 
       final Map<String, SensorReading> latestData = {};
-      int dataCount = 0;
 
       for (final field in fields) {
         final data = await getSensorData(
@@ -102,8 +92,13 @@ from(bucket: "$_bucket")
 
         if (data.isNotEmpty) {
           latestData[field] = data.last;
-          dataCount++;
         }
+      }
+
+      if (latestData.isNotEmpty) {
+        print('✅ Datos BMS cargados: ${latestData.keys.length} campos');
+      } else {
+        print('⚠️ No se encontraron datos BMS');
       }
 
       return latestData;
@@ -130,7 +125,6 @@ from(bucket: "$_bucket")
     final List<SensorReading> readings = [];
 
     if (csvData.trim().isEmpty || csvData.length <= 2) {
-      print('Respuesta vacía de InfluxDB');
       return readings;
     }
 
@@ -144,11 +138,6 @@ from(bucket: "$_bucket")
       final valueIndex = headers.indexOf('_value');
       final measurementIndex = headers.indexOf('_measurement');
       final deviceIdIndex = headers.indexOf('device_id');
-
-      print('Headers encontrados: $headers');
-      print(
-        'Índices - time: $timeIndex, value: $valueIndex, measurement: $measurementIndex, device: $deviceIdIndex',
-      );
 
       for (int i = 1; i < lines.length; i++) {
         final line = lines[i].trim();
@@ -183,7 +172,7 @@ from(bucket: "$_bucket")
         }
       }
     } catch (e) {
-      print('Error general parseando CSV: $e');
+      print('❌ Error parseando datos InfluxDB: $e');
     }
 
     return readings;

@@ -31,14 +31,14 @@ class ActuatorControlService {
       );
 
       if (response.statusCode == 200) {
-        print('✅ Actuador controlado exitosamente');
+        // Actuador controlado exitosamente
         return true;
       } else {
-        print('❌ Error controlando actuador: ${response.statusCode}');
+        print('Error controlando actuador: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      print('Error controlando actuadores: $e');
+      print('Error crítico controlando actuadores: $e');
       return false;
     }
   }
@@ -46,16 +46,12 @@ class ActuatorControlService {
   /// Obtiene el estado actual de todos los actuadores
   static Future<Map<String, int>?> getActuatorStatus(String deviceId) async {
     try {
-      print('Obteniendo estado de actuadores para: $deviceId');
-
       final response = await http.get(
         Uri.parse('$_apiUrl/actuators/status/$deviceId'),
         headers: {'Content-Type': 'application/json'},
       );
 
-      print(
-        'Respuesta del servidor: ${response.statusCode} - ${response.body}',
-      );
+      // Estado obtenido correctamente
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -65,14 +61,12 @@ class ActuatorControlService {
           return actuators.map((key, value) => MapEntry(key, value as int));
         }
       } else {
-        print(
-          'Error obteniendo estado: ${response.statusCode} - ${response.body}',
-        );
+        print('Error obteniendo estado: ${response.statusCode}');
       }
 
       return null;
     } catch (e) {
-      print('Error obteniendo estado de actuadores: $e');
+      print('Error crítico obteniendo estado: $e');
       return null;
     }
   }
@@ -98,14 +92,14 @@ class ActuatorControlService {
         },
       );
 
-      print('Consultando telemetría: $uri');
+      // Consultando telemetría desde la API
 
       final response = await http.get(
         uri,
         headers: {'Content-Type': 'application/json'},
       );
 
-      print('Respuesta de telemetría: ${response.statusCode}');
+      // Respuesta de telemetría recibida
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -127,14 +121,12 @@ class ActuatorControlService {
           return telemetryData;
         }
       } else {
-        print(
-          'Error obteniendo telemetría: ${response.statusCode} - ${response.body}',
-        );
+        print('Error obteniendo telemetría: ${response.statusCode}');
       }
 
       return null;
     } catch (e) {
-      print('Error obteniendo telemetría: $e');
+      print('Error crítico obteniendo telemetría: $e');
       return null;
     }
   }
