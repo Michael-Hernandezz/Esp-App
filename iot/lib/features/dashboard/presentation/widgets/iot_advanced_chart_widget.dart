@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import '../../../../core/theme/sh_colors.dart';
 
 /// Widget avanzado de gráficas para IoT con múltiples tipos de visualización
 class IoTAdvancedChartWidget extends StatefulWidget {
@@ -140,16 +141,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: SHColors.cardColor, // Fondo oscuro
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [widget.primaryColor.withOpacity(0.05), Colors.transparent],
-          ),
+          color: SHColors.cardColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -178,12 +176,12 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: widget.primaryColor.withOpacity(0.1),
+            color: SHColors.chartPrimary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             _getIconForMeasurement(),
-            color: widget.primaryColor,
+            color: SHColors.chartPrimary,
             size: 24,
           ),
         ),
@@ -253,10 +251,10 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: widget.primaryColor.withOpacity(0.1),
+        color: SHColors.chartPrimary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: widget.primaryColor.withOpacity(0.3),
+          color: SHColors.chartPrimary.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -275,7 +273,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   '${currentValue.toStringAsFixed(1)}${widget.unit}',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: widget.primaryColor,
+                    color: SHColors.chartPrimary,
                   ),
                 ),
               ],
@@ -353,8 +351,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   _loadData();
                 }
               },
-              selectedColor: widget.primaryColor.withOpacity(0.2),
-              checkmarkColor: widget.primaryColor,
+              selectedColor: SHColors.chartPrimary.withOpacity(0.2),
+              checkmarkColor: SHColors.chartPrimary,
             ),
           );
         }).toList(),
@@ -364,7 +362,9 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
 
   Widget _buildChart() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: CircularProgressIndicator(color: SHColors.chartPrimary),
+      );
     }
 
     if (_error != null) {
@@ -398,13 +398,13 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               verticalInterval: null,
               getDrawingHorizontalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: SHColors.chartGrid.withOpacity(0.2),
                   strokeWidth: 1,
                 );
               },
               getDrawingVerticalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: SHColors.chartGrid.withOpacity(0.1),
                   strokeWidth: 1,
                 );
               },
@@ -454,7 +454,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
             borderData: FlBorderData(
               show: true,
               border: Border.all(
-                color: widget.primaryColor.withOpacity(0.2),
+                color: SHColors.chartPrimary.withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -466,19 +466,19 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   return FlSpot(entry.key.toDouble(), animatedValue);
                 }).toList(),
                 isCurved: true,
-                color: widget.primaryColor,
+                color: SHColors.chartPrimary,
                 barWidth: 3,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
                   show: true,
                   getDotPainter: (spot, percent, barData, index) {
                     final quality = _data[index].quality;
-                    Color dotColor = widget.primaryColor;
+                    Color dotColor = SHColors.chartPrimary;
                     if (quality == IoTDataQuality.critical) {
-                      dotColor = Colors.red;
+                      dotColor = SHColors.chartError;
                     }
                     if (quality == IoTDataQuality.warning) {
-                      dotColor = Colors.orange;
+                      dotColor = SHColors.chartWarning;
                     }
 
                     return FlDotCirclePainter(
@@ -493,8 +493,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      widget.primaryColor.withOpacity(0.3),
-                      widget.primaryColor.withOpacity(0.05),
+                      SHColors.chartPrimary.withOpacity(0.3),
+                      SHColors.chartPrimary.withOpacity(0.05),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -507,14 +507,14 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 if (widget.minThreshold != null)
                   HorizontalLine(
                     y: widget.minThreshold!,
-                    color: Colors.red.withOpacity(0.8),
+                    color: SHColors.chartError.withOpacity(0.8),
                     strokeWidth: 2,
                     dashArray: [5, 5],
                   ),
                 if (widget.maxThreshold != null)
                   HorizontalLine(
                     y: widget.maxThreshold!,
-                    color: Colors.orange.withOpacity(0.8),
+                    color: SHColors.chartWarning.withOpacity(0.8),
                     strokeWidth: 2,
                     dashArray: [5, 5],
                   ),
@@ -603,7 +603,9 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                 value: percentage,
                 strokeWidth: 20,
                 backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(widget.primaryColor),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  SHColors.chartPrimary,
+                ),
               ),
             ),
             Column(
@@ -613,7 +615,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   currentValue.toStringAsFixed(1),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: widget.primaryColor,
+                    color: SHColors.chartPrimary,
                   ),
                 ),
                 Text(widget.unit, style: Theme.of(context).textTheme.bodyLarge),
@@ -736,11 +738,11 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   Color _getColorForQuality(IoTDataQuality quality) {
     switch (quality) {
       case IoTDataQuality.critical:
-        return Colors.red;
+        return SHColors.chartError;
       case IoTDataQuality.warning:
-        return Colors.orange;
+        return SHColors.chartWarning;
       case IoTDataQuality.normal:
-        return widget.primaryColor;
+        return SHColors.chartPrimary;
     }
   }
 }
