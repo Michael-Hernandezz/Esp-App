@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import 'package:iot/core/shared/data/services/iot_data_service.dart';
 
 /// Widget avanzado de gráficas para IoT con múltiples tipos de visualización
 class IoTAdvancedChartWidget extends StatefulWidget {
@@ -71,8 +72,22 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         _error = null;
       });
 
-      // Simulando datos IoT más realistas
-      _data = _generateIoTData();
+      // Obtener datos reales de InfluxDB
+      final readings = await IoTDataService.getHistoricalData(
+        measurement: widget.measurement,
+        deviceId: widget.deviceId ?? 'dev-001',
+        timeRange: _getTimeRangeDuration(),
+      );
+
+      // Convertir SensorReading a IoTDataPoint
+      _data = readings.map((reading) {
+        final quality = _getDataQuality(reading.value);
+        return IoTDataPoint(
+          timestamp: reading.timestamp,
+          value: reading.value,
+          quality: quality,
+        );
+      }).toList();
 
       setState(() {
         _isLoading = false;
@@ -80,6 +95,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
 
       _animationController.forward();
     } catch (e) {
+      print('[ERROR] IoT Chart Load Data: $e');
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -87,44 +103,19 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     }
   }
 
-  List<IoTDataPoint> _generateIoTData() {
-    final random = math.Random();
-    final now = DateTime.now();
-    final dataPoints = <IoTDataPoint>[];
-
-    final baseValue = widget.measurement == 'temp'
-        ? 22.0
-        : widget.measurement == 'v'
-        ? 12.0
-        : 2.5;
-
-    for (int i = 50; i >= 0; i--) {
-      final timestamp = now.subtract(Duration(minutes: i * 5));
-      double value;
-
-      // Generar datos más realistas según el tipo de sensor
-      switch (widget.measurement) {
-        case 'temp':
-          // Temperatura con patrón diario y variación natural
-          final hourOfDay = timestamp.hour;
-          final dayPattern = math.sin((hourOfDay - 6) * math.pi / 12) * 5;
-          value = baseValue + dayPattern + (random.nextDouble() - 0.5) * 3;
-          break;
-        case 'v':
-          // Voltaje con pequeñas fluctuaciones
-          value = baseValue + (random.nextDouble() - 0.5) * 0.5;
-          break;
-        default:
-          value = baseValue + (random.nextDouble() - 0.5) * 2;
-      }
-
-      final quality = _getDataQuality(value);
-      dataPoints.add(
-        IoTDataPoint(timestamp: timestamp, value: value, quality: quality),
-      );
+  Duration _getTimeRangeDuration() {
+    switch (_selectedTimeRange) {
+      case IoTTimeRange.last1Hour:
+        return const Duration(hours: 1);
+      case IoTTimeRange.last6Hours:
+        return const Duration(hours: 6);
+      case IoTTimeRange.last24Hours:
+        return const Duration(hours: 24);
+      case IoTTimeRange.last7Days:
+        return const Duration(days: 7);
+      case IoTTimeRange.last30Days:
+        return const Duration(days: 30);
     }
-
-    return dataPoints;
   }
 
   IoTDataQuality _getDataQuality(double value) {
