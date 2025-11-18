@@ -29,25 +29,11 @@ class SmartHomeDrawer extends StatelessWidget {
           const Divider(color: SHColors.cardColor),
           _buildDrawerItem(
             context,
-            icon: Icons.schedule,
-            title: 'Automatizaciones',
-            subtitle: 'Temporizadores globales',
-            onTap: () => _navigateToScreen(context, '/automations'),
-          ),
-          _buildDrawerItem(
-            context,
             icon: Icons.notifications,
             title: 'Notificaciones',
             subtitle: 'Alertas y seguridad',
             onTap: () => _navigateToScreen(context, '/notifications'),
             badge: _getNotificationBadge(),
-          ),
-          _buildDrawerItem(
-            context,
-            icon: Icons.history,
-            title: 'Historial',
-            subtitle: 'Registro de actividad',
-            onTap: () => _navigateToScreen(context, '/history'),
           ),
           const Divider(color: SHColors.cardColor),
           _buildDrawerItem(
@@ -169,14 +155,8 @@ class SmartHomeDrawer extends StatelessWidget {
       case '/home':
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         break;
-      case '/automations':
-        Navigator.pushNamed(context, '/automations');
-        break;
       case '/notifications':
         Navigator.pushNamed(context, '/notifications');
-        break;
-      case '/history':
-        Navigator.pushNamed(context, '/history');
         break;
       case '/settings':
         Navigator.pushNamed(context, '/settings');

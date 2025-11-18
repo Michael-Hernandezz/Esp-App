@@ -7,7 +7,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final roomStateNotifier = RoomStateProvider.of(context);
-    
+
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
       appBar: AppBar(
@@ -141,8 +141,9 @@ class DashboardScreen extends StatelessWidget {
                 'Consumo de Energía',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
@@ -221,8 +222,9 @@ class DashboardScreen extends StatelessWidget {
                 'Dispositivos Encendidos',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
@@ -317,8 +319,9 @@ class DashboardScreen extends StatelessWidget {
                 'Acciones Rápidas',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],

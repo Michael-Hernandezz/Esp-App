@@ -131,7 +131,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
+      elevation: 2,
+      color: const Color(0xFF2A2D35),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
@@ -139,7 +140,7 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [widget.primaryColor.withOpacity(0.05), Colors.transparent],
+            colors: [widget.primaryColor.withOpacity(0.02), Colors.transparent],
           ),
         ),
         child: Padding(
@@ -185,9 +186,11 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
             children: [
               Text(
                 widget.title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
               if (widget.deviceId != null)
                 Text(
@@ -244,10 +247,10 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: widget.primaryColor.withOpacity(0.1),
+        color: widget.primaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: widget.primaryColor.withOpacity(0.3),
+          color: widget.primaryColor.withOpacity(0.15),
           width: 1,
         ),
       ),
@@ -389,14 +392,14 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
               verticalInterval: null,
               getDrawingHorizontalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.2),
-                  strokeWidth: 1,
+                  color: Colors.grey.withOpacity(0.1),
+                  strokeWidth: 0.5,
                 );
               },
               getDrawingVerticalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.1),
-                  strokeWidth: 1,
+                  color: Colors.grey.withOpacity(0.05),
+                  strokeWidth: 0.5,
                 );
               },
             ),
@@ -484,8 +487,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      widget.primaryColor.withOpacity(0.3),
-                      widget.primaryColor.withOpacity(0.05),
+                      widget.primaryColor.withOpacity(0.15),
+                      widget.primaryColor.withOpacity(0.03),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,

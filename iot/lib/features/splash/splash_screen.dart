@@ -4,9 +4,7 @@ import '../auth/auth.dart';
 import '../auth/auth_di.dart';
 import '../home/presentation/screens/home_screen.dart';
 import '../dashboard/presentation/screens/enhanced_dashboard_screen.dart';
-import '../automations/presentation/screens/automations_screen.dart';
 import '../notifications/presentation/screens/notifications_screen.dart';
-import '../history/presentation/screens/history_screen.dart';
 import '../settings/presentation/screens/settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -158,9 +156,7 @@ class _MainAppNavigationState extends State<MainAppNavigation> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const EnhancedDashboardScreen(),
-    const AutomationsScreen(),
     const NotificationsScreen(),
-    const HistoryScreen(),
     const SettingsScreen(),
   ];
 
@@ -183,16 +179,8 @@ class _MainAppNavigationState extends State<MainAppNavigation> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.auto_awesome),
-            label: 'Automatización',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notificaciones',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Historial',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

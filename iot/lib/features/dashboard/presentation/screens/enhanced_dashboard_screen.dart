@@ -101,6 +101,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
     }
 
     return Card(
+      color: const Color(0xFF2A2D35),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -108,9 +110,12 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           children: [
             Text(
               'Resumen del Sistema',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 20,
+                letterSpacing: 0.5,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -331,6 +336,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
 
     if (_systemStats.isEmpty || _systemStats['total_devices'] == 0) {
       return Card(
+        color: const Color(0xFF2A2D35),
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -448,6 +455,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       valueListenable: RoomStateProvider.of(context)!,
       builder: (context, rooms, _) {
         return Card(
+          color: const Color(0xFF2A2D35),
+          elevation: 2,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -455,9 +464,12 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
               children: [
                 Text(
                   'Estado de Habitaciones',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 20,
+                    letterSpacing: 0.5,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 ...rooms.map((room) => _buildRoomStatusItem(room)),

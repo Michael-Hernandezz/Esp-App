@@ -62,6 +62,8 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color(0xFF2A2D35),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -74,6 +76,8 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
                   widget.title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18,
                   ),
                 ),
                 IconButton(
@@ -141,7 +145,10 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
           drawVerticalLine: false,
           horizontalInterval: null,
           getDrawingHorizontalLine: (value) {
-            return FlLine(color: Colors.grey[800]!, strokeWidth: 0.5);
+            return FlLine(
+              color: Colors.grey.withOpacity(0.15),
+              strokeWidth: 0.5,
+            );
           },
         ),
         titlesData: FlTitlesData(
@@ -188,7 +195,7 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: Colors.grey[800]!, width: 1),
+          border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
         ),
         minY: null,
         maxY: null,
@@ -200,8 +207,8 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
             isCurved: true,
             gradient: LinearGradient(
               colors: [
-                widget.color.withOpacity(0.8),
-                widget.color.withOpacity(0.3),
+                widget.color.withOpacity(0.5),
+                widget.color.withOpacity(0.2),
               ],
             ),
             barWidth: 3,
@@ -211,8 +218,8 @@ class _SensorChartWidgetState extends State<SensorChartWidget> {
               show: true,
               gradient: LinearGradient(
                 colors: [
-                  widget.color.withOpacity(0.3),
-                  widget.color.withOpacity(0.1),
+                  widget.color.withOpacity(0.15),
+                  widget.color.withOpacity(0.05),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,

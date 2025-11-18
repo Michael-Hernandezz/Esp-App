@@ -58,7 +58,8 @@ class _CellVoltageChartWidgetState extends State<CellVoltageChartWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: SHColors.cardColor,
+      color: const Color(0xFF2A2D35),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -72,6 +73,7 @@ class _CellVoltageChartWidgetState extends State<CellVoltageChartWidget> {
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    fontSize: 18,
                   ),
                 ),
                 IconButton(
@@ -139,7 +141,10 @@ class _CellVoltageChartWidgetState extends State<CellVoltageChartWidget> {
           drawVerticalLine: false,
           horizontalInterval: 0.1,
           getDrawingHorizontalLine: (value) {
-            return FlLine(color: Colors.grey[800]!, strokeWidth: 0.5);
+            return FlLine(
+              color: Colors.grey.withOpacity(0.15),
+              strokeWidth: 0.5,
+            );
           },
         ),
         titlesData: FlTitlesData(
@@ -190,7 +195,7 @@ class _CellVoltageChartWidgetState extends State<CellVoltageChartWidget> {
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: Colors.grey[800]!, width: 1),
+          border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
         ),
         minY: 3.0,
         maxY: 4.2,

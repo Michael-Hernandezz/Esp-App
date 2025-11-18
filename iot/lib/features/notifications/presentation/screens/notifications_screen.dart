@@ -47,40 +47,59 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   final List<SmartNotification> _notifications = [
     SmartNotification(
       id: '1',
-      title: 'Humedad Baja Detectada',
-      message: 'La humedad en el living room está por debajo del 30%',
+      title: 'Voltaje de Batería Bajo',
+      message:
+          'El voltaje de la batería está por debajo de 22V. Considere cargar.',
       type: NotificationType.warning,
       timestamp: DateTime.now().subtract(const Duration(minutes: 15)),
       isRead: false,
-      icon: Icons.water_drop,
+      icon: Icons.battery_alert,
     ),
     SmartNotification(
       id: '2',
-      title: 'Lámpara Olvidada',
-      message:
-          'Las luces de la cocina han estado encendidas por más de 4 horas',
-      type: NotificationType.reminder,
+      title: 'Estado de Carga Óptimo',
+      message: 'La batería alcanzó el 95% de carga (SOC)',
+      type: NotificationType.info,
       timestamp: DateTime.now().subtract(const Duration(hours: 1)),
       isRead: false,
-      icon: Icons.lightbulb,
+      icon: Icons.battery_charging_full,
     ),
     SmartNotification(
       id: '3',
-      title: 'Movimiento Detectado',
-      message: 'Sensor de movimiento activado en el pasillo',
+      title: 'Corriente Alta Detectada',
+      message: 'La corriente del circuito supera los 4.5A',
       type: NotificationType.security,
       timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
       isRead: true,
-      icon: Icons.security,
+      icon: Icons.flash_on,
     ),
     SmartNotification(
       id: '4',
-      title: 'Temperatura Alta',
-      message: 'La temperatura en el dormitorio supera los 28°C',
+      title: 'Salud de Batería Excelente',
+      message: 'El SOH de la batería se mantiene en 98%',
       type: NotificationType.info,
       timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
       isRead: true,
-      icon: Icons.thermostat,
+      icon: Icons.health_and_safety,
+    ),
+    SmartNotification(
+      id: '5',
+      title: 'Voltaje de Salida Estable',
+      message: 'El voltaje de salida del convertidor se mantiene en 12.2V',
+      type: NotificationType.info,
+      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+      isRead: true,
+      icon: Icons.electrical_services,
+    ),
+    SmartNotification(
+      id: '6',
+      title: 'Desbalance en Celdas',
+      message:
+          'Diferencia de voltaje detectada entre celdas. Revise el sistema.',
+      type: NotificationType.warning,
+      timestamp: DateTime.now().subtract(const Duration(minutes: 45)),
+      isRead: false,
+      icon: Icons.warning,
     ),
   ];
 
@@ -122,9 +141,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         const SizedBox(height: 16),
         _buildSecurityOverview(),
         const SizedBox(height: 16),
-        ..._securityDevices
-            .map((device) => _buildSecurityDeviceCard(device))
-            ,
+        ..._securityDevices.map((device) => _buildSecurityDeviceCard(device)),
       ],
     );
   }
@@ -317,9 +334,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        ..._notifications
-            .map((notification) => _buildNotificationCard(notification))
-            ,
+        ..._notifications.map(
+          (notification) => _buildNotificationCard(notification),
+        ),
       ],
     );
   }
