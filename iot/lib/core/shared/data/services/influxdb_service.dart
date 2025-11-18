@@ -22,21 +22,21 @@ class InfluxDBService {
     Duration? timeRange,
   }) async {
     try {
-      print('Iniciando consulta para measurement: $measurement');
-
-      // Consulta Flux para obtener datos
+      // Consulta Flux - Telegraf guarda todo en measurement="telemetry" y cada variable es un field
+      final hours = timeRange?.inHours ?? 24;
       final query =
           '''
 from(bucket: "$_bucket")
-  |> range(start: -24h)
+  |> range(start: -${hours}h)
+  |> filter(fn: (r) => r["_measurement"] == "telemetry")
   |> filter(fn: (r) => r["_field"] == "$measurement")
+  ${deviceId != null ? '|> filter(fn: (r) => r["device_id"] == "$deviceId")' : ''}
   |> sort(columns: ["_time"], desc: true)
-  |> limit(n: 10)
+  |> limit(n: 100)
 ''';
 
-      print('Query: $query');
-      print('URL: $_baseUrl/api/v2/query?org=$_org');
-      print('Headers: $_headers');
+      print('[DEBUG] Query para $measurement:');
+      print(query);
 
       final response = await http.post(
         Uri.parse('$_baseUrl/api/v2/query?org=$_org'),
@@ -44,24 +44,22 @@ from(bucket: "$_bucket")
         body: jsonEncode({'query': query}),
       );
 
-      print('Status Code: ${response.statusCode}');
+      print('[DEBUG] Response status: ${response.statusCode}');
+      print('[DEBUG] Response body length: ${response.body.length}');
 
       if (response.statusCode == 200) {
-        print('Respuesta exitosa de InfluxDB para $measurement');
-        print('Contenido completo de respuesta: ${response.body}');
-        print('Longitud de respuesta: ${response.body.length}');
-        final parsedData = _parseInfluxJsonResponse(response.body);
-        print('Datos parseados: ${parsedData.length} registros');
-        if (parsedData.isNotEmpty) {
-          print('Primer registro: ${parsedData.first}');
-        }
+        final parsedData = _parseInfluxJsonResponse(response.body, measurement);
+        print('[DEBUG] Parsed ${parsedData.length} records for $measurement');
         return parsedData;
       } else {
-        print('Error en InfluxDB: ${response.statusCode} - ${response.body}');
+        print(
+          '[ERROR] InfluxDB Error ${response.statusCode}: ${response.body}',
+        );
         return [];
       }
-    } catch (e) {
-      print('Error al obtener datos de InfluxDB: $e');
+    } catch (e, stack) {
+      print('[ERROR] InfluxDB Connection Failed: $e');
+      print('[ERROR] Stack: $stack');
       return [];
     }
   }
@@ -69,6 +67,9 @@ from(bucket: "$_bucket")
   /// Obtiene últimos valores de sensores para el dashboard
   static Future<Map<String, SensorReading>> getLatestSensorData() async {
     try {
+      print('[DEBUG] Iniciando consulta a InfluxDB...');
+      print('[DEBUG] URL: $_baseUrl, Org: $_org, Bucket: $_bucket');
+
       // Nuevas variables del sistema BMS
       final measurements = [
         'v_bat_conv', // Voltaje de batería (convertidor)
@@ -92,17 +93,26 @@ from(bucket: "$_bucket")
       for (final measurement in measurements) {
         final data = await getSensorData(
           measurement: measurement,
-          timeRange: const Duration(hours: 24),
+          deviceId: 'dev-001', // Filtrar específicamente por dev-001
+          timeRange: const Duration(hours: 1), // Reducir a 1 hora para debug
         );
 
+        print('[DEBUG] $measurement: ${data.length} registros encontrados');
         if (data.isNotEmpty) {
-          latestData[measurement] = data.last;
+          latestData[measurement] =
+              data.first; // Usar first porque ordenamos desc
+          print(
+            '[DEBUG] $measurement = ${data.first.value} (${data.first.deviceId})',
+          );
         }
       }
 
+      print(
+        '[DEBUG] Total de datos obtenidos: ${latestData.length} measurements',
+      );
       return latestData;
     } catch (e) {
-      print('Error al obtener datos más recientes: $e');
+      print('[ERROR] Error al obtener datos más recientes: $e');
       return {};
     }
   }
@@ -121,11 +131,13 @@ from(bucket: "$_bucket")
   }
 
   /// Parsea la respuesta CSV de InfluxDB
-  static List<SensorReading> _parseInfluxJsonResponse(String csvData) {
+  static List<SensorReading> _parseInfluxJsonResponse(
+    String csvData,
+    String fieldName,
+  ) {
     final List<SensorReading> readings = [];
 
     if (csvData.trim().isEmpty || csvData.length <= 2) {
-      print('Respuesta vacía de InfluxDB');
       return readings;
     }
 
@@ -137,50 +149,46 @@ from(bucket: "$_bucket")
       final headers = lines[0].split(',');
       final timeIndex = headers.indexOf('_time');
       final valueIndex = headers.indexOf('_value');
-      final measurementIndex = headers.indexOf('_measurement');
+      final fieldIndex = headers.indexOf('_field');
       final deviceIdIndex = headers.indexOf('device_id');
 
-      print('Headers encontrados: $headers');
-      print(
-        'Índices - time: $timeIndex, value: $valueIndex, measurement: $measurementIndex, device: $deviceIdIndex',
-      );
+      if (valueIndex < 0) return readings;
 
       for (int i = 1; i < lines.length; i++) {
         final line = lines[i].trim();
         if (line.isEmpty) continue;
 
         final values = line.split(',');
-        if (values.length <= valueIndex || valueIndex < 0) continue;
+        if (values.length <= valueIndex) continue;
 
         try {
           final rawValue = values[valueIndex];
-          final measurement =
-              measurementIndex >= 0 && measurementIndex < values.length
-              ? values[measurementIndex]
-              : 'unknown';
+          final field = fieldIndex >= 0 && fieldIndex < values.length
+              ? values[fieldIndex]
+              : fieldName;
 
           final numericValue = double.tryParse(rawValue) ?? 0.0;
-          final textValue = null;
 
           final reading = SensorReading(
             timestamp: timeIndex >= 0 && timeIndex < values.length
                 ? DateTime.parse(values[timeIndex])
                 : DateTime.now(),
             value: numericValue,
-            textValue: textValue,
-            measurement: measurement,
+            textValue: null,
+            measurement:
+                field, // Usar el field como measurement para compatibilidad
             deviceId: deviceIdIndex >= 0 && deviceIdIndex < values.length
                 ? values[deviceIdIndex]
                 : 'unknown',
           );
           readings.add(reading);
-          print('Registro parseado: ${reading.toString()}');
         } catch (e) {
-          print('Error parseando línea: $line - $e');
+          // Ignorar líneas inválidas silenciosamente
+          continue;
         }
       }
     } catch (e) {
-      print('Error general parseando CSV: $e');
+      print('[ERROR] CSV Parse Failed: $e');
     }
 
     return readings;

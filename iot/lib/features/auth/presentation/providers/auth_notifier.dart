@@ -56,20 +56,16 @@ class AuthNotifier extends ValueNotifier<AuthState> {
 
   Future<void> checkAuthStatus() async {
     value = AuthState.loading();
-    print('🔍 Verificando estado de autenticacion...');
 
     try {
       final user = await _getCurrentUserUseCase.execute();
 
       if (user != null && user.isTokenValid) {
-        print('Usuario autenticado: ${user.deviceId}');
         value = AuthState.authenticated(user);
       } else {
-        print('Usuario no autenticado o token invalido');
         value = AuthState.unauthenticated();
       }
     } catch (e) {
-      print('Error verificando autenticacion: $e');
       value = AuthState.error('Error verificando autenticacion: $e');
     }
   }
@@ -100,11 +96,8 @@ class AuthNotifier extends ValueNotifier<AuthState> {
 
     try {
       await _logoutUseCase.execute();
-      // Forzar estado unauthenticated inmediatamente
       value = AuthState.unauthenticated();
-      print('Logout completado - estado: unauthenticated');
     } catch (e) {
-      print('Error en logout: $e');
       value = AuthState.error('Error al cerrar sesion: $e');
     }
   }

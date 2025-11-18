@@ -20,16 +20,16 @@ def test_influxdb_connection():
             health = client.health()
             print(f"✅ InfluxDB está saludable: {health.status}")
             
-            # Consultar datos recientes de nuestro test
+            # Consultar datos recientes de dev-001
             query = f'''
 from(bucket: "{INFLUX_BUCKET}")
-  |> range(start: -1h)
+  |> range(start: -5m)
   |> filter(fn: (r) => r._measurement == "telemetry")
-  |> filter(fn: (r) => r.device_id == "test-device")
-  |> last()
+  |> filter(fn: (r) => r.device_id == "dev-001")
+  |> limit(n: 10)
 '''
             
-            print("📊 Consultando datos recientes...")
+            print("📊 Consultando datos recientes de dev-001...")
             tables = client.query_api().query(org=INFLUX_ORG, query=query)
             
             data_found = False

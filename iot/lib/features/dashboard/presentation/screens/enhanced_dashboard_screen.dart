@@ -36,10 +36,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error cargando estadísticas: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

@@ -23,30 +23,18 @@ class ActuatorControlService {
       if (cpEnable != null) payload['cp_enable'] = cpEnable;
       if (pmonEnable != null) payload['pmon_enable'] = pmonEnable;
 
-      print('Enviando comando de actuadores: $payload');
-
       final response = await http.post(
         Uri.parse('$_apiUrl/actuators/control'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(payload),
       );
 
-      print(
-        'Respuesta del servidor: ${response.statusCode} - ${response.body}',
-      );
-
       if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        print('Comando enviado exitosamente: ${result['payload']}');
         return true;
       } else {
-        print(
-          'Error en el servidor: ${response.statusCode} - ${response.body}',
-        );
         return false;
       }
     } catch (e) {
-      print('Error controlando actuadores: $e');
       return false;
     }
   }
@@ -54,15 +42,9 @@ class ActuatorControlService {
   /// Obtiene el estado actual de todos los actuadores
   static Future<Map<String, int>?> getActuatorStatus(String deviceId) async {
     try {
-      print('Obteniendo estado de actuadores para: $deviceId');
-
       final response = await http.get(
         Uri.parse('$_apiUrl/actuators/status/$deviceId'),
         headers: {'Content-Type': 'application/json'},
-      );
-
-      print(
-        'Respuesta del servidor: ${response.statusCode} - ${response.body}',
       );
 
       if (response.statusCode == 200) {
@@ -72,15 +54,10 @@ class ActuatorControlService {
         if (actuators != null) {
           return actuators.map((key, value) => MapEntry(key, value as int));
         }
-      } else {
-        print(
-          'Error obteniendo estado: ${response.statusCode} - ${response.body}',
-        );
       }
 
       return null;
     } catch (e) {
-      print('Error obteniendo estado de actuadores: $e');
       return null;
     }
   }
@@ -106,14 +83,10 @@ class ActuatorControlService {
         },
       );
 
-      print('Consultando telemetría: $uri');
-
       final response = await http.get(
         uri,
         headers: {'Content-Type': 'application/json'},
       );
-
-      print('Respuesta de telemetría: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:iot/core/shared/data/services/influxdb_service.dart';
 
-/// Widget de alertas IoT en tiempo real
+/// Widget de alertas IoT en tiempo real conectado a InfluxDB
 class IoTAlertsWidget extends StatefulWidget {
   const IoTAlertsWidget({super.key});
 
@@ -24,9 +25,9 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
     );
     _blinkController.repeat(reverse: true);
 
-    _generateSampleAlerts();
-    _alertTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      _updateAlerts();
+    _loadRealAlerts();
+    _alertTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      _loadRealAlerts();
     });
   }
 
@@ -37,45 +38,86 @@ class _IoTAlertsWidgetState extends State<IoTAlertsWidget>
     super.dispose();
   }
 
-  void _generateSampleAlerts() {
-    _activeAlerts = [
-      IoTAlert(
-        id: 'TEMP_HIGH_001',
-        title: 'Temperatura Crítica',
-        message: 'Sensor TEMP-001: 35.2°C (Límite: 30°C)',
-        severity: IoTAlertSeverity.critical,
-        timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
-        deviceId: 'TEMP-001',
-        sensorType: 'Temperatura',
-      ),
-      IoTAlert(
-        id: 'VOLT_LOW_001',
-        title: 'Voltaje Bajo',
-        message: 'Sistema eléctrico: 10.8V (Mínimo: 11V)',
-        severity: IoTAlertSeverity.warning,
-        timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-        deviceId: 'VOLT-001',
-        sensorType: 'Voltaje',
-      ),
-    ];
-  }
+  Future<void> _loadRealAlerts() async {
+    try {
+      final latestData = await InfluxDBService.getLatestSensorData();
+      final List<IoTAlert> newAlerts = [];
 
-  void _updateAlerts() {
-    // Simular nuevas alertas ocasionalmente
-    if (DateTime.now().second % 15 == 0) {
-      setState(() {
-        _activeAlerts.add(
+      if (latestData.isEmpty) return;
+
+      // Verificar alertas activas (alert = 1)
+      if (latestData.containsKey('alert') && latestData['alert']!.value > 0) {
+        newAlerts.add(
           IoTAlert(
-            id: 'SIM_${DateTime.now().millisecondsSinceEpoch}',
-            title: 'Conexión Inestable',
-            message: 'Sensor WIFI-001: Señal débil detectada',
-            severity: IoTAlertSeverity.info,
-            timestamp: DateTime.now(),
-            deviceId: 'WIFI-001',
-            sensorType: 'Conectividad',
+            id: 'ALERT_${latestData['alert']!.deviceId}',
+            title: 'Alerta del Sistema',
+            message: 'Alerta activa en ${latestData['alert']!.deviceId}',
+            severity: IoTAlertSeverity.critical,
+            timestamp: latestData['alert']!.timestamp,
+            deviceId: latestData['alert']!.deviceId,
+            sensorType: 'Sistema BMS',
           ),
         );
-      });
+      }
+
+      // Verificar voltaje de batería bajo (<22V)
+      if (latestData.containsKey('v_bat_conv') &&
+          latestData['v_bat_conv']!.value < 22.0) {
+        newAlerts.add(
+          IoTAlert(
+            id: 'LOW_VBAT_${latestData['v_bat_conv']!.deviceId}',
+            title: 'Voltaje de Batería Bajo',
+            message:
+                'Batería: ${latestData['v_bat_conv']!.value.toStringAsFixed(2)}V (Mínimo: 22V)',
+            severity: IoTAlertSeverity.warning,
+            timestamp: latestData['v_bat_conv']!.timestamp,
+            deviceId: latestData['v_bat_conv']!.deviceId,
+            sensorType: 'Voltaje',
+          ),
+        );
+      }
+
+      // Verificar SOC bajo (<20%)
+      if (latestData.containsKey('soc_percent') &&
+          latestData['soc_percent']!.value < 20.0) {
+        newAlerts.add(
+          IoTAlert(
+            id: 'LOW_SOC_${latestData['soc_percent']!.deviceId}',
+            title: 'Estado de Carga Crítico',
+            message:
+                'SOC: ${latestData['soc_percent']!.value.toStringAsFixed(1)}% (Mínimo: 20%)',
+            severity: IoTAlertSeverity.critical,
+            timestamp: latestData['soc_percent']!.timestamp,
+            deviceId: latestData['soc_percent']!.deviceId,
+            sensorType: 'Estado de Carga',
+          ),
+        );
+      }
+
+      // Verificar SOH bajo (<70%)
+      if (latestData.containsKey('soh_percent') &&
+          latestData['soh_percent']!.value < 70.0) {
+        newAlerts.add(
+          IoTAlert(
+            id: 'LOW_SOH_${latestData['soh_percent']!.deviceId}',
+            title: 'Salud de Batería Degradada',
+            message:
+                'SOH: ${latestData['soh_percent']!.value.toStringAsFixed(1)}% (Mínimo: 70%)',
+            severity: IoTAlertSeverity.warning,
+            timestamp: latestData['soh_percent']!.timestamp,
+            deviceId: latestData['soh_percent']!.deviceId,
+            sensorType: 'Salud Batería',
+          ),
+        );
+      }
+
+      if (mounted) {
+        setState(() {
+          _activeAlerts = newAlerts;
+        });
+      }
+    } catch (e) {
+      // Manejar errores silenciosamente
     }
   }
 

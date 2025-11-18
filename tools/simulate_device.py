@@ -22,27 +22,31 @@ state = {
 }
 
 def on_connect(client, userdata, flags, rc, properties=None):
-  print("Connected:", rc)
+  print(f"[{DEVICE_ID}] Connected: {'OK' if rc == 0 else f'Error {rc}'}")
   client.subscribe([(TOPIC_CMD, 1), (TOPIC_CFG, 1)])
   client.publish(TOPIC_STATUS, json.dumps({"online": True, "fw": "sim-1.0", "status": 1}), qos=1, retain=True)
 
 def on_message(client, userdata, msg):
   try: data = json.loads(msg.payload.decode())
-  except: print("Invalid JSON on", msg.topic); return
+  except: return  # Silenciar errores de JSON
   if msg.topic == TOPIC_CMD:
     # Comandos legacy
     for k in ["setpoint_v", "setpoint_i", "enable"]:
       if k in data: state[k] = data[k]
     # Comandos de actuadores
+    changed = []
     for k in ["chg_enable", "dsg_enable", "cp_enable", "pmon_enable"]:
       if k in data: 
         state[k] = bool(data[k])
-        print(f"Actuator {k}: {state[k]}")
-    print("CMD:", data)
+        changed.append(f"{k}={state[k]}")
+    if changed:
+      print(f"[{DEVICE_ID}] Actuators: {', '.join(changed)}")
   elif msg.topic == TOPIC_CFG:
     global REPORT_MS
-    REPORT_MS = int(data.get("report_period_ms", REPORT_MS))
-    print("CFG:", data)
+    new_period = int(data.get("report_period_ms", REPORT_MS))
+    if new_period != REPORT_MS:
+      REPORT_MS = new_period
+      print(f"[{DEVICE_ID}] Report period: {REPORT_MS}ms")
 
 def loop_publish(client):
   while True:

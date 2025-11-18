@@ -12,7 +12,6 @@ class IoTDataService {
       final latestData = await InfluxDBService.getLatestSensorData();
 
       if (latestData.isEmpty) {
-        print('No hay datos disponibles desde InfluxDB');
         return [];
       }
 
@@ -66,7 +65,7 @@ class IoTDataService {
 
       return rooms;
     } catch (e) {
-      print('Error obteniendo datos IoT reales: $e');
+      print('[ERROR] IoT Data Service: $e');
       return [];
     }
   }
@@ -136,7 +135,7 @@ class IoTDataService {
             : 'unknown',
       };
     } catch (e) {
-      print('Error obteniendo estadísticas: $e');
+      print('[ERROR] System Stats: $e');
       return {
         'total_devices': 0,
         'active_devices': 0,

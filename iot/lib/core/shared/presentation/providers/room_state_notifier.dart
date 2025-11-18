@@ -14,9 +14,7 @@ class RoomStateNotifier extends ValueNotifier<List<SmartRoom>> {
     try {
       final realData = await IoTDataService.getRealIoTData();
       value = realData;
-      print('Datos IoT cargados: ${realData.length} habitaciones');
     } catch (e) {
-      print('Error cargando datos IoT, usando datos de respaldo: $e');
       value = SmartRoom.fakeValues;
     }
   }
