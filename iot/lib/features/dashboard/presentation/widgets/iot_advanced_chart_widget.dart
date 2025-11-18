@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import 'dart:async';
 import 'package:iot/core/shared/data/services/iot_data_service.dart';
 
 /// Widget avanzado de gráficas para IoT con múltiples tipos de visualización
@@ -14,6 +15,7 @@ class IoTAdvancedChartWidget extends StatefulWidget {
   final double? minThreshold;
   final double? maxThreshold;
   final bool showRealTimeIndicator;
+  final int? autoRefreshSeconds;
 
   const IoTAdvancedChartWidget({
     super.key,
@@ -26,6 +28,7 @@ class IoTAdvancedChartWidget extends StatefulWidget {
     this.minThreshold,
     this.maxThreshold,
     this.showRealTimeIndicator = true,
+    this.autoRefreshSeconds,
   });
 
   @override
@@ -40,6 +43,8 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
   late AnimationController _animationController;
   late AnimationController _pulseController;
   IoTTimeRange _selectedTimeRange = IoTTimeRange.last6Hours;
+
+  Timer? _autoRefreshTimer;
 
   @override
   void initState() {
@@ -56,10 +61,19 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
     if (widget.showRealTimeIndicator) {
       _pulseController.repeat();
     }
+
+    // Configurar auto-refresh si está habilitado
+    if (widget.autoRefreshSeconds != null) {
+      _autoRefreshTimer = Timer.periodic(
+        Duration(seconds: widget.autoRefreshSeconds!),
+        (timer) => _loadData(),
+      );
+    }
   }
 
   @override
   void dispose() {
+    _autoRefreshTimer?.cancel();
     _animationController.dispose();
     _pulseController.dispose();
     super.dispose();
@@ -79,8 +93,11 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
         timeRange: _getTimeRangeDuration(),
       );
 
+      // Filtrar datos para mostrar solo cada N puntos (mejor visualización)
+      final filteredReadings = _filterDataPoints(readings, 30);
+
       // Convertir SensorReading a IoTDataPoint
-      _data = readings.map((reading) {
+      _data = filteredReadings.map((reading) {
         final quality = _getDataQuality(reading.value);
         return IoTDataPoint(
           timestamp: reading.timestamp,
@@ -116,6 +133,23 @@ class _IoTAdvancedChartWidgetState extends State<IoTAdvancedChartWidget>
       case IoTTimeRange.last30Days:
         return const Duration(days: 30);
     }
+  }
+
+  /// Filtra datos para mostrar máximo maxPoints puntos
+  List<dynamic> _filterDataPoints(List<dynamic> data, int maxPoints) {
+    if (data.length <= maxPoints) return data;
+
+    final step = data.length / maxPoints;
+    final filtered = <dynamic>[];
+
+    for (int i = 0; i < maxPoints; i++) {
+      final index = (i * step).floor();
+      if (index < data.length) {
+        filtered.add(data[index]);
+      }
+    }
+
+    return filtered;
   }
 
   IoTDataQuality _getDataQuality(double value) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:iot/core/core.dart';
 import 'package:iot/core/shared/data/services/actuator_control_service.dart';
 
 class CellVoltageChartWidget extends StatefulWidget {

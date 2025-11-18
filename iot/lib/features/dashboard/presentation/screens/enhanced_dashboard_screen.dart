@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:iot/core/core.dart';
 import 'package:iot/features/dashboard/presentation/widgets/iot_advanced_chart_widget.dart';
 import 'package:iot/features/dashboard/presentation/widgets/iot_alerts_widget.dart';
@@ -18,11 +19,29 @@ class EnhancedDashboardScreen extends StatefulWidget {
 class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Map<String, dynamic> _systemStats = {};
   bool _isLoading = true;
+  Timer? _autoRefreshTimer;
+  int _refreshTrigger = 0;
 
   @override
   void initState() {
     super.initState();
     _loadSystemStats();
+    _startAutoRefresh();
+  }
+
+  void _startAutoRefresh() {
+    _autoRefreshTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      setState(() {
+        _refreshTrigger++;
+      });
+      _loadSystemStats();
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoRefreshTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadSystemStats() async {
@@ -74,9 +93,9 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSystemOverview(),
-              const SizedBox(height: 16),
               const IoTAlertsWidget(),
+              const SizedBox(height: 24),
+              _buildSystemOverview(),
               const SizedBox(height: 24),
               _buildBMSSection(),
               const SizedBox(height: 24),
@@ -389,6 +408,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         ),
         const SizedBox(height: 16),
         IoTAdvancedChartWidget(
+          key: ValueKey('v_bat_$_refreshTrigger'),
           measurement: 'v_bat_conv',
           title: 'Voltaje de Batería (Convertidor)',
           primaryColor: Colors.green,
@@ -398,9 +418,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           minThreshold: 22.0,
           maxThreshold: 26.0,
           showRealTimeIndicator: true,
+          autoRefreshSeconds: 3,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
+          key: ValueKey('v_out_$_refreshTrigger'),
           measurement: 'v_out_conv',
           title: 'Voltaje de Salida (Convertidor)',
           primaryColor: Colors.blue,
@@ -410,9 +432,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           minThreshold: 11.0,
           maxThreshold: 13.0,
           showRealTimeIndicator: true,
+          autoRefreshSeconds: 3,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
+          key: ValueKey('i_circuit_$_refreshTrigger'),
           measurement: 'i_circuit',
           title: 'Corriente del Circuito',
           primaryColor: Colors.amber,
@@ -421,9 +445,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           chartType: IoTChartType.line,
           maxThreshold: 5.0,
           showRealTimeIndicator: true,
+          autoRefreshSeconds: 3,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
+          key: ValueKey('soc_$_refreshTrigger'),
           measurement: 'soc_percent',
           title: 'Estado de Carga (SOC)',
           primaryColor: Colors.cyan,
@@ -433,9 +459,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           minThreshold: 20.0,
           maxThreshold: 100.0,
           showRealTimeIndicator: true,
+          autoRefreshSeconds: 3,
         ),
         const SizedBox(height: 24),
         IoTAdvancedChartWidget(
+          key: ValueKey('soh_$_refreshTrigger'),
           measurement: 'soh_percent',
           title: 'Salud de la Batería (SOH)',
           primaryColor: Colors.purple,
@@ -445,6 +473,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           minThreshold: 80.0,
           maxThreshold: 100.0,
           showRealTimeIndicator: true,
+          autoRefreshSeconds: 3,
         ),
       ],
     );
