@@ -16,6 +16,12 @@ infra/.env
 api/.env
 infra/mosquitto/passwordfile
 
+# DigitalOcean deployment secrets
+DigitalOcean/.env
+DigitalOcean/logs/
+DigitalOcean/mosquitto/data/
+DigitalOcean/mosquitto/log/
+
 # VSCode
 .vscode/
 
