@@ -37,7 +37,6 @@ class StorageService implements StorageRepository {
       final userModel = UserModel.fromJson(json);
       return userModel.toEntity();
     } catch (e) {
-      print('Error al obtener datos del usuario: $e');
       return null;
     }
   }
@@ -56,7 +55,6 @@ class StorageService implements StorageRepository {
     try {
       return await _secureStorage.read(key: _tokenKey);
     } catch (e) {
-      print('Error al obtener token: $e');
       return null;
     }
   }

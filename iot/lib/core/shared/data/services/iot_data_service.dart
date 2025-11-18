@@ -65,7 +65,6 @@ class IoTDataService {
 
       return rooms;
     } catch (e) {
-      print('[ERROR] IoT Data Service: $e');
       return [];
     }
   }
@@ -147,7 +146,6 @@ class IoTDataService {
             : 'unknown',
       };
     } catch (e) {
-      print('[ERROR] System Stats: $e');
       return {
         'total_devices': 0,
         'active_devices': 0,

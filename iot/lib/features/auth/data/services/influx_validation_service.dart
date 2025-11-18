@@ -25,28 +25,19 @@ from(bucket: "telemetry")
         body: jsonEncode({'query': query}),
       );
 
-      print('Validación InfluxDB - Status: ${response.statusCode}');
-
       // Token valido si la respuesta es 200 (incluso si no hay datos)
       return response.statusCode == 200;
     } catch (e) {
-      print('Error validando token: $e');
 
       // MODO DEMO: Si no puede conectar a InfluxDB, permitir login con credenciales específicas
       if (token ==
               'm9dZ53tgCda7obiBCJn4xFVloD8q9zbqckGPvMzlPxJ3Jwb2ur6gGp-sgWD-KjHH5tvJIqgCSvpuVKeOHj66rw==' &&
           organization == 'microgrid') {
-        print(
-          'MODO DEMO: Permitiendo login offline con credenciales conocidas',
-        );
         return true;
       }
 
       // Tambien permitir modo demo con credenciales simples
       if (token == 'demo123' && organization == 'microgrid') {
-        print(
-          'MODO DEMO: Permitiendo login offline con credenciales de demo',
-        );
         return true;
       }
 
@@ -86,7 +77,6 @@ from(bucket: "telemetry")
 
       return null;
     } catch (e) {
-      print('Error obteniendo info de organización: $e');
       return null;
     }
   }
@@ -118,7 +108,6 @@ from(bucket: "telemetry")
 
       return [];
     } catch (e) {
-      print('Error obteniendo buckets: $e');
       return [];
     }
   }

@@ -107,15 +107,10 @@ class ActuatorControlService {
 
           return telemetryData;
         }
-      } else {
-        print(
-          'Error obteniendo telemetría: ${response.statusCode} - ${response.body}',
-        );
-      }
+      } 
 
       return null;
     } catch (e) {
-      print('Error obteniendo telemetría: $e');
       return null;
     }
   }

@@ -49,7 +49,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return user;
     } catch (e) {
-      print('Error en login: $e');
       return null;
     }
   }
@@ -69,7 +68,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return user.copyWith(isTokenValid: isValid);
     } catch (e) {
-      print('Error obteniendo usuario actual: $e');
       return null;
     }
   }

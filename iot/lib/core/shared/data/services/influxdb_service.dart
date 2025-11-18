@@ -35,8 +35,6 @@ from(bucket: "$_bucket")
   |> limit(n: 100)
 ''';
 
-      print('[DEBUG] Query para $measurement:');
-      print(query);
 
       final response = await http.post(
         Uri.parse('$_baseUrl/api/v2/query?org=$_org'),
@@ -44,22 +42,13 @@ from(bucket: "$_bucket")
         body: jsonEncode({'query': query}),
       );
 
-      print('[DEBUG] Response status: ${response.statusCode}');
-      print('[DEBUG] Response body length: ${response.body.length}');
-
       if (response.statusCode == 200) {
         final parsedData = _parseInfluxJsonResponse(response.body, measurement);
-        print('[DEBUG] Parsed ${parsedData.length} records for $measurement');
         return parsedData;
       } else {
-        print(
-          '[ERROR] InfluxDB Error ${response.statusCode}: ${response.body}',
-        );
         return [];
       }
-    } catch (e, stack) {
-      print('[ERROR] InfluxDB Connection Failed: $e');
-      print('[ERROR] Stack: $stack');
+    } catch (e) {
       return [];
     }
   }
@@ -67,9 +56,6 @@ from(bucket: "$_bucket")
   /// Obtiene últimos valores de sensores para el dashboard
   static Future<Map<String, SensorReading>> getLatestSensorData() async {
     try {
-      print('[DEBUG] Iniciando consulta a InfluxDB...');
-      print('[DEBUG] URL: $_baseUrl, Org: $_org, Bucket: $_bucket');
-
       // Nuevas variables del sistema BMS
       final measurements = [
         'v_bat_conv', // Voltaje de batería (convertidor)
@@ -96,23 +82,14 @@ from(bucket: "$_bucket")
           deviceId: 'dev-001', // Filtrar específicamente por dev-001
           timeRange: const Duration(hours: 1), // Reducir a 1 hora para debug
         );
-
-        print('[DEBUG] $measurement: ${data.length} registros encontrados');
         if (data.isNotEmpty) {
           latestData[measurement] =
-              data.first; // Usar first porque ordenamos desc
-          print(
-            '[DEBUG] $measurement = ${data.first.value} (${data.first.deviceId})',
-          );
+              data.first; // Usar first porque ordenamos descendentemente
         }
       }
 
-      print(
-        '[DEBUG] Total de datos obtenidos: ${latestData.length} measurements',
-      );
       return latestData;
     } catch (e) {
-      print('[ERROR] Error al obtener datos más recientes: $e');
       return {};
     }
   }
@@ -188,7 +165,7 @@ from(bucket: "$_bucket")
         }
       }
     } catch (e) {
-      print('[ERROR] CSV Parse Failed: $e');
+      // Ignorar errores de parseo silenciosamente
     }
 
     return readings;

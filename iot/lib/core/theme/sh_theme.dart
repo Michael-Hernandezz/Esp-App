@@ -21,18 +21,9 @@ abstract class SHTheme {
         fontWeight: FontWeight.w400,
         color: SHColors.textColor,
       ),
-      displayLarge: GoogleFonts.buda(
-        fontSize: 70,
-        color: SHColors.textColor,
-      ),
-      displayMedium: GoogleFonts.buda(
-        fontSize: 50,
-        color: SHColors.textColor,
-      ),
-      displaySmall: GoogleFonts.buda(
-        fontSize: 40,
-        color: SHColors.textColor,
-      ),
+      displayLarge: GoogleFonts.buda(fontSize: 70, color: SHColors.textColor),
+      displayMedium: GoogleFonts.buda(fontSize: 50, color: SHColors.textColor),
+      displaySmall: GoogleFonts.buda(fontSize: 40, color: SHColors.textColor),
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
