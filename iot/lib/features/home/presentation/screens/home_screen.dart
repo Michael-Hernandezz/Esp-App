@@ -95,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 animation: _alertService,
                 builder: (context, child) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                   final criticalAlert = _alertService.activeAlerts
                       .where((alert) => alert.alertType == AlertType.critical || alert.alertType == AlertType.abnormal || alert.alertType == AlertType.below)
                       .isNotEmpty
@@ -104,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       : null;
                   
 =======
+=======
+>>>>>>> Stashed changes
                   final criticalAlert =
                       _alertService.activeAlerts
                           .where(
@@ -123,6 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             .first
                       : null;
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                   if (criticalAlert != null) {
                     return FloatingAlertBanner(

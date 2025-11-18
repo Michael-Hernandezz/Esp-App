@@ -39,15 +39,21 @@ class SensorAlertService extends ChangeNotifier {
       _checkSensorValues();
     });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     // También hacer una verificación inmediata
     _checkSensorValues();
     
 =======
+=======
+>>>>>>> Stashed changes
 
     // También hacer una verificación inmediata
     _checkSensorValues();
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     print('SensorAlertService: Monitoreo iniciado');
     notifyListeners();
@@ -61,7 +67,11 @@ class SensorAlertService extends ChangeNotifier {
     _monitoringTimer?.cancel();
     _monitoringTimer = null;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -76,7 +86,11 @@ class SensorAlertService extends ChangeNotifier {
       // Validar todos los valores
       final newAlerts = SensorRangeConfig.validateSensorData(sensorValues);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -88,7 +102,10 @@ class SensorAlertService extends ChangeNotifier {
       // Limpiar alertas obsoletas
       _cleanupOldAlerts();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     } catch (e) {
@@ -102,7 +119,11 @@ class SensorAlertService extends ChangeNotifier {
       // Obtener los datos más recientes de InfluxDB
       final latestData = await InfluxDBService.getLatestSensorData();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -111,7 +132,11 @@ class SensorAlertService extends ChangeNotifier {
       // Convertir los datos a un mapa con los nombres correctos de variables
       final Map<String, double> sensorValues = {};
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -120,7 +145,11 @@ class SensorAlertService extends ChangeNotifier {
         final measurement = entry.key;
         final reading = entry.value;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -156,7 +185,10 @@ class SensorAlertService extends ChangeNotifier {
       // Usar el nuevo método para validar datos
       await validateSensorData(sensorValues);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     } catch (e) {
@@ -169,10 +201,16 @@ class SensorAlertService extends ChangeNotifier {
     final now = DateTime.now();
     final lastAlert = _lastAlertTime[alert.variable];
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     // Aplicar cooldown para evitar spam de alertas
     if (lastAlert != null && 
         now.difference(lastAlert) < _alertCooldown) {
+=======
+
+    // Aplicar cooldown para evitar spam de alertas
+    if (lastAlert != null && now.difference(lastAlert) < _alertCooldown) {
+>>>>>>> Stashed changes
 =======
 
     // Aplicar cooldown para evitar spam de alertas
@@ -184,12 +222,18 @@ class SensorAlertService extends ChangeNotifier {
     // Agregar la alerta a las listas
     _activeAlerts.add(alert);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     _allAlerts.insert(0, alert); // Agregar al principio para orden cronológico inverso
 =======
+=======
+>>>>>>> Stashed changes
     _allAlerts.insert(
       0,
       alert,
     ); // Agregar al principio para orden cronológico inverso
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     _lastAlertTime[alert.variable] = now;
 
@@ -262,12 +306,18 @@ class SensorAlertService extends ChangeNotifier {
     final now = DateTime.now();
     final last24Hours = _allAlerts
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         .where((alert) => now.difference(alert.timestamp) < const Duration(hours: 24))
 =======
+=======
+>>>>>>> Stashed changes
         .where(
           (alert) =>
               now.difference(alert.timestamp) < const Duration(hours: 24),
         )
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         .toList();
 
@@ -285,7 +335,11 @@ class SensorAlertService extends ChangeNotifier {
   String _getMostFrequentVariable(List<SensorAlert> alerts) {
     final Map<String, int> frequency = {};
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -296,9 +350,13 @@ class SensorAlertService extends ChangeNotifier {
     if (frequency.isEmpty) return 'none';
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     return frequency.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
+=======
+    return frequency.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+>>>>>>> Stashed changes
 =======
     return frequency.entries.reduce((a, b) => a.value > b.value ? a : b).key;
 >>>>>>> Stashed changes
@@ -310,7 +368,11 @@ class SensorAlertService extends ChangeNotifier {
     super.dispose();
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes

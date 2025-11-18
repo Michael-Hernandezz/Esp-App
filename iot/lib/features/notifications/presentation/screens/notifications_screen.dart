@@ -57,7 +57,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '1',
       title: 'Voltaje de Batería Alto',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El voltaje de batería (dev-001) ha superado el umbral de 26V. Valor actual: 26.3V',
+=======
+      message:
+          'El voltaje de batería (dev-001) ha superado el umbral de 26V. Valor actual: 26.3V',
+>>>>>>> Stashed changes
 =======
       message:
           'El voltaje de batería (dev-001) ha superado el umbral de 26V. Valor actual: 26.3V',
@@ -71,7 +76,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '2',
       title: 'BMS: Carga Habilitada',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El sistema BMS ha habilitado la carga automáticamente. Estado: CHG_ENABLE = ON',
+=======
+      message:
+          'El sistema BMS ha habilitado la carga automáticamente. Estado: CHG_ENABLE = ON',
+>>>>>>> Stashed changes
 =======
       message:
           'El sistema BMS ha habilitado la carga automáticamente. Estado: CHG_ENABLE = ON',
@@ -94,7 +104,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '4',
       title: 'Estado de Carga (SOC) Bajo',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El estado de carga de la batería está por debajo del 20%: 18.7%',
+=======
+      message:
+          'El estado de carga de la batería está por debajo del 20%: 18.7%',
+>>>>>>> Stashed changes
 =======
       message:
           'El estado de carga de la batería está por debajo del 20%: 18.7%',
@@ -108,7 +123,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '5',
       title: 'Sistema BMS Conectado',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El dispositivo dev-001 se ha conectado exitosamente al sistema de monitoreo',
+=======
+      message:
+          'El dispositivo dev-001 se ha conectado exitosamente al sistema de monitoreo',
+>>>>>>> Stashed changes
 =======
       message:
           'El dispositivo dev-001 se ha conectado exitosamente al sistema de monitoreo',
@@ -122,7 +142,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '6',
       title: 'Voltaje de Salida Estable',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El voltaje de salida del convertidor se mantiene estable en 12.1V',
+=======
+      message:
+          'El voltaje de salida del convertidor se mantiene estable en 12.1V',
+>>>>>>> Stashed changes
 =======
       message:
           'El voltaje de salida del convertidor se mantiene estable en 12.1V',
@@ -136,7 +161,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       id: '7',
       title: 'Alerta: Descarga Deshabilitada',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       message: 'El sistema BMS ha deshabilitado la descarga por protección. DSG_ENABLE = OFF',
+=======
+      message:
+          'El sistema BMS ha deshabilitado la descarga por protección. DSG_ENABLE = OFF',
+>>>>>>> Stashed changes
 =======
       message:
           'El sistema BMS ha deshabilitado la descarga por protección. DSG_ENABLE = OFF',

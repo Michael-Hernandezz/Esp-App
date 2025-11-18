@@ -54,26 +54,38 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
               _buildTestButton(
                 'Voltaje Bajo',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 () => _simulateAlert('v_conv_in', 7.5, 'Voltaje convertidor entrada'),
 =======
+=======
+>>>>>>> Stashed changes
                 () => _simulateAlert(
                   'v_conv_in',
                   7.5,
                   'Voltaje convertidor entrada',
                 ),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 Colors.orange,
               ),
               _buildTestButton(
                 'Voltaje Alto',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 () => _simulateAlert('v_conv_in', 13.0, 'Voltaje convertidor entrada'),
 =======
+=======
+>>>>>>> Stashed changes
                 () => _simulateAlert(
                   'v_conv_in',
                   13.0,
                   'Voltaje convertidor entrada',
                 ),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 Colors.red,
               ),
@@ -85,7 +97,12 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
               _buildTestButton(
                 'Batería Baja',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 () => _simulateAlert('soc_percent', 60.0, 'Salud de la batería'),
+=======
+                () =>
+                    _simulateAlert('soc_percent', 60.0, 'Salud de la batería'),
+>>>>>>> Stashed changes
 =======
                 () =>
                     _simulateAlert('soc_percent', 60.0, 'Salud de la batería'),
@@ -95,7 +112,12 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
               _buildTestButton(
                 'Corriente Alta',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 () => _simulateAlert('i_circuit', 4.5, 'Corriente de las celdas'),
+=======
+                () =>
+                    _simulateAlert('i_circuit', 4.5, 'Corriente de las celdas'),
+>>>>>>> Stashed changes
 =======
                 () =>
                     _simulateAlert('i_circuit', 4.5, 'Corriente de las celdas'),
@@ -122,7 +144,13 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
                 'Monitoreo: ${_alertService.isMonitoring ? 'ACTIVO' : 'INACTIVO'}',
                 style: TextStyle(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                   color: _alertService.isMonitoring ? Colors.green : Colors.grey,
+=======
+                  color: _alertService.isMonitoring
+                      ? Colors.green
+                      : Colors.grey,
+>>>>>>> Stashed changes
 =======
                   color: _alertService.isMonitoring
                       ? Colors.green
@@ -160,9 +188,13 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
         backgroundColor: color,
         foregroundColor: Colors.white,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+=======
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+>>>>>>> Stashed changes
 =======
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
 >>>>>>> Stashed changes
@@ -263,7 +295,12 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
                                 Expanded(
                                   child: Column(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                     crossAxisAlignment: CrossAxisAlignment.start,
+=======
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+>>>>>>> Stashed changes
 =======
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -390,7 +427,11 @@ class _AlertTestWidgetState extends State<AlertTestWidget> {
     }
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes

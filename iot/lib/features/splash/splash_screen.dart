@@ -158,9 +158,15 @@ class _MainAppNavigationState extends State<MainAppNavigation> {
     if (_currentIndex == 1) {
       // Aquí puedes agregar la lógica de refresh específica del dashboard
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Actualizando datos...')),
       );
+=======
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Actualizando datos...')));
+>>>>>>> Stashed changes
 =======
       ScaffoldMessenger.of(
         context,
@@ -183,7 +189,13 @@ class _MainAppNavigationState extends State<MainAppNavigation> {
     return Scaffold(
       backgroundColor: SHColors.backgroundColor,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       drawer: _currentIndex == 1 ? null : null, // Sin drawer para Dashboard (índice 1)
+=======
+      drawer: _currentIndex == 1
+          ? null
+          : null, // Sin drawer para Dashboard (índice 1)
+>>>>>>> Stashed changes
 =======
       drawer: _currentIndex == 1
           ? null

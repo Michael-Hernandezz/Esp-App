@@ -40,7 +40,13 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
 
     try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       print('🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}');
+=======
+      print(
+        '🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}',
+      );
+>>>>>>> Stashed changes
 =======
       print(
         '🔄 BMSControlWidget: Consultando API para deviceId: ${widget.deviceId}',
@@ -51,7 +57,11 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
       );
       print('🔄 BMSControlWidget: Respuesta de API: $states');
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -81,6 +91,8 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
     final currentState = _actuatorStates[actuatorId] ?? 0;
     final newState = currentState == 1 ? 0 : 1;
     
+    print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
+
     print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
 
     print('🎮 BMSControlWidget: Toggle $actuatorId: $currentState → $newState');
@@ -130,7 +142,13 @@ class _BMSControlWidgetState extends State<BMSControlWidget> {
 
         widget.onStateChanged?.call();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         print('✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState');
+=======
+        print(
+          '✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState',
+        );
+>>>>>>> Stashed changes
 =======
         print(
           '✅ BMSControlWidget: Estado local actualizado: $actuatorId = $newState',

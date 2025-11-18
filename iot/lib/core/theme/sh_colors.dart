@@ -19,7 +19,11 @@ abstract class SHColors {
     Color(0xff1a1d23),
   ];
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes

@@ -68,10 +68,14 @@ class SensorAlertWidget extends StatelessWidget {
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             border: Border.all(
               color: Colors.white.withOpacity(0.3),
               width: 1,
             ),
+=======
+            border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+>>>>>>> Stashed changes
 =======
             border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
 >>>>>>> Stashed changes
@@ -84,11 +88,15 @@ class SensorAlertWidget extends StatelessWidget {
             ],
           ),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           child: Icon(
             _getAlertIcon(),
             color: Colors.white,
             size: 24,
           ),
+=======
+          child: Icon(_getAlertIcon(), color: Colors.white, size: 24),
+>>>>>>> Stashed changes
 =======
           child: Icon(_getAlertIcon(), color: Colors.white, size: 24),
 >>>>>>> Stashed changes
@@ -191,11 +199,15 @@ class SensorAlertWidget extends StatelessWidget {
     return Row(
       children: [
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         Icon(
           _getAlertIcon(),
           color: Colors.white,
           size: 20,
         ),
+=======
+        Icon(_getAlertIcon(), color: Colors.white, size: 20),
+>>>>>>> Stashed changes
 =======
         Icon(_getAlertIcon(), color: Colors.white, size: 20),
 >>>>>>> Stashed changes
@@ -270,7 +282,12 @@ class SensorAlertWidget extends StatelessWidget {
         return Icons.warning_rounded;
       case AlertType.below:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         return Icons.trending_down_rounded; // Icono de flecha hacia abajo para valores bajos
+=======
+        return Icons
+            .trending_down_rounded; // Icono de flecha hacia abajo para valores bajos
+>>>>>>> Stashed changes
 =======
         return Icons
             .trending_down_rounded; // Icono de flecha hacia abajo para valores bajos
@@ -414,12 +431,18 @@ class AlertListWidget extends StatelessWidget {
                               onTap: onDismissAll,
                               child: const Padding(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
 =======
+=======
+>>>>>>> Stashed changes
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 6,
                                 ),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                                 child: Text(
                                   'Limpiar Todo',
@@ -441,6 +464,7 @@ class AlertListWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: Column(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     children: displayAlerts.map((alert) => SensorAlertWidget(
                           alert: alert,
                           onDismiss: onDismissAlert != null 
@@ -448,6 +472,8 @@ class AlertListWidget extends StatelessWidget {
                               : null,
                         )).toList(),
 =======
+=======
+>>>>>>> Stashed changes
                     children: displayAlerts
                         .map(
                           (alert) => SensorAlertWidget(
@@ -458,6 +484,9 @@ class AlertListWidget extends StatelessWidget {
                           ),
                         )
                         .toList(),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                   ),
                 ),
@@ -468,12 +497,18 @@ class AlertListWidget extends StatelessWidget {
                     child: Center(
                       child: Container(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
 =======
+=======
+>>>>>>> Stashed changes
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 6,
                         ),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
@@ -635,7 +670,11 @@ class FloatingAlertBanner extends StatelessWidget {
     );
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes

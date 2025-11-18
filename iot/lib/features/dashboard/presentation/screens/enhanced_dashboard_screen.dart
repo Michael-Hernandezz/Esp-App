@@ -69,6 +69,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       // Solo validar si hay datos del sistema cargados
       if (_systemStats.isEmpty) return;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
       // Crear mapa con los valores actuales de sensores
       final Map<String, double> sensorValues = {};
@@ -80,6 +81,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       if (_systemStats.containsKey('voltage_out')) {
         sensorValues['v_conv_out'] = (_systemStats['voltage_out'] as num).toDouble();
 =======
+=======
+>>>>>>> Stashed changes
 
       // Crear mapa con los valores actuales de sensores
       final Map<String, double> sensorValues = {};
@@ -92,6 +95,9 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       if (_systemStats.containsKey('voltage_out')) {
         sensorValues['v_conv_out'] = (_systemStats['voltage_out'] as num)
             .toDouble();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       }
       if (_systemStats.containsKey('current')) {
@@ -99,14 +105,20 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       }
       if (_systemStats.containsKey('avg_battery_voltage')) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         sensorValues['v_cell_1'] = (_systemStats['avg_battery_voltage'] as num).toDouble();
       }
       
 =======
+=======
+>>>>>>> Stashed changes
         sensorValues['v_cell_1'] = (_systemStats['avg_battery_voltage'] as num)
             .toDouble();
       }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       // Validar solo si tenemos datos para validar
       if (sensorValues.isNotEmpty) {
@@ -128,7 +140,12 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         backgroundColor: SHColors.cardColor,
         foregroundColor: Colors.white,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         automaticallyImplyLeading: false, // Esto quita el botón de menú hamburguesa
+=======
+        automaticallyImplyLeading:
+            false, // Esto quita el botón de menú hamburguesa
+>>>>>>> Stashed changes
 =======
         automaticallyImplyLeading:
             false, // Esto quita el botón de menú hamburguesa
@@ -146,7 +163,11 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
                   ),
                 );
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -156,15 +177,21 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
                   _loadSystemStats(),
                 ]);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 
                 // Validar datos después de la actualización para detectar alertas reales
                 await _validateCurrentSensorData();
                 
 =======
+=======
+>>>>>>> Stashed changes
 
                 // Validar datos después de la actualización para detectar alertas reales
                 await _validateCurrentSensorData();
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 // Confirmar actualización
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -263,9 +290,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
             Text(
               'Resumen del Sistema',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
+=======
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+>>>>>>> Stashed changes
 =======
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
 >>>>>>> Stashed changes
@@ -624,7 +655,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           color: SHColors.cardColor,
           elevation: 4,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+=======
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+>>>>>>> Stashed changes
 =======
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -738,6 +775,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Map<String, int> _extractBMSStatesFromData() {
     final Map<String, int> bmsStates = {};
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     // Buscar en los datos de sistema los estados BMS
     if (_systemStats.containsKey('chg_enable')) {
@@ -754,6 +792,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
     }
     
 =======
+=======
+>>>>>>> Stashed changes
 
     // Buscar en los datos de sistema los estados BMS
     if (_systemStats.containsKey('chg_enable')) {
@@ -773,6 +813,9 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
           (_systemStats['pmon_enable'] as num?)?.round() ?? 0;
     }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     print('Estados BMS extraídos desde dashboard: $bmsStates');
     return bmsStates;

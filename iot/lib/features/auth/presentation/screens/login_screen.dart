@@ -27,7 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardVisible = keyboardHeight > 0;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -40,15 +44,21 @@ class _LoginScreenState extends State<LoginScreen> {
           child: ConstrainedBox(
             constraints: BoxConstraints(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               minHeight: MediaQuery.of(context).size.height - 
                          MediaQuery.of(context).padding.top - 
                          MediaQuery.of(context).padding.bottom - 48,
 =======
+=======
+>>>>>>> Stashed changes
               minHeight:
                   MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top -
                   MediaQuery.of(context).padding.bottom -
                   48,
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             ),
             child: IntrinsicHeight(
@@ -80,7 +90,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardVisible = keyboardHeight > 0;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -113,8 +127,13 @@ class _LoginScreenState extends State<LoginScreen> {
           'Accede con tus credenciales del dispositivo',
           style: TextStyle(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             color: Colors.white.withOpacity(0.7), 
             fontSize: isKeyboardVisible ? 14 : 16
+=======
+            color: Colors.white.withOpacity(0.7),
+            fontSize: isKeyboardVisible ? 14 : 16,
+>>>>>>> Stashed changes
 =======
             color: Colors.white.withOpacity(0.7),
             fontSize: isKeyboardVisible ? 14 : 16,

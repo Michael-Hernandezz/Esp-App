@@ -37,9 +37,15 @@ class SensorRange {
       return AlertType.critical;
     } else if (value < adequateMin) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       return AlertType.below;  // Valores por debajo del mínimo
     } else if (value > adequateMax) {
       return AlertType.abnormal;  // Valores por encima del máximo
+=======
+      return AlertType.below; // Valores por debajo del mínimo
+    } else if (value > adequateMax) {
+      return AlertType.abnormal; // Valores por encima del máximo
+>>>>>>> Stashed changes
 =======
       return AlertType.below; // Valores por debajo del mínimo
     } else if (value > adequateMax) {
@@ -67,9 +73,15 @@ class SensorRange {
 enum AlertType {
   normal,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   below,      // Nuevo: valor por debajo del rango (amarillo)
   abnormal,   // Valor por encima del rango (rojo)
   critical,   // Valor crítico
+=======
+  below, // Nuevo: valor por debajo del rango (amarillo)
+  abnormal, // Valor por encima del rango (rojo)
+  critical, // Valor crítico
+>>>>>>> Stashed changes
 =======
   below, // Nuevo: valor por debajo del rango (amarillo)
   abnormal, // Valor por encima del rango (rojo)
@@ -141,7 +153,12 @@ class SensorRangeConfig {
       adequateMin: 0.0,
       adequateMax: 100.0,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       abnormalCondition: 'convertir voltaje de entrada en porcentaje (siendo 12.6 el 100% y 0 el 0%)',
+=======
+      abnormalCondition:
+          'convertir voltaje de entrada en porcentaje (siendo 12.6 el 100% y 0 el 0%)',
+>>>>>>> Stashed changes
 =======
       abnormalCondition:
           'convertir voltaje de entrada en porcentaje (siendo 12.6 el 100% y 0 el 0%)',
@@ -225,7 +242,11 @@ class SensorAlert {
     );
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes
