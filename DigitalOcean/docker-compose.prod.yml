@@ -15,10 +15,11 @@ services:
     networks:
       - microgrid-network
     healthcheck:
-      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t test -m test"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "sh", "-c", "echo 'PING' | nc localhost 1883 > /dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   influxdb:
     image: influxdb:2.7
@@ -54,14 +55,15 @@ services:
       influxdb:
         condition: service_healthy
       mosquitto:
-        condition: service_healthy
+        condition: service_started
     networks:
       - microgrid-network
     healthcheck:
-      test: ["CMD-SHELL", "telegraf --test --config /etc/telegraf/telegraf.conf || exit 1"]
+      test: ["CMD-SHELL", "telegraf --test --config /etc/telegraf/telegraf.conf > /dev/null 2>&1 || exit 1"]
       interval: 60s
       timeout: 10s
       retries: 3
+      start_period: 30s
 
   microgrid-api:
     build:
@@ -86,14 +88,15 @@ services:
       influxdb:
         condition: service_healthy
       mosquitto:
-        condition: service_healthy
+        condition: service_started
     networks:
       - microgrid-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 30s
 
 volumes:
   influxdb_data:
