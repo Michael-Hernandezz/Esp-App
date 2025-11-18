@@ -190,25 +190,26 @@ class BMSDataWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withOpacity(0.6), width: 1.5),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
               color: color,
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(color: Colors.white70, fontSize: 10),
+            style: const TextStyle(color: Colors.white, fontSize: 11),
             textAlign: TextAlign.center,
           ),
         ],

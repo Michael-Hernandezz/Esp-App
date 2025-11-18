@@ -121,6 +121,15 @@ class IoTDataService {
         'avg_output_voltage': latestData.containsKey('v_out_conv')
             ? latestData['v_out_conv']!.value
             : 0.0,
+        'v_cell1': latestData.containsKey('v_cell1')
+            ? latestData['v_cell1']!.value
+            : 0.0,
+        'v_cell2': latestData.containsKey('v_cell2')
+            ? latestData['v_cell2']!.value
+            : 0.0,
+        'v_cell3': latestData.containsKey('v_cell3')
+            ? latestData['v_cell3']!.value
+            : 0.0,
         'avg_current': latestData.containsKey('i_circuit')
             ? latestData['i_circuit']!.value
             : 0.0,
@@ -130,6 +139,9 @@ class IoTDataService {
         'avg_soh': latestData.containsKey('soh_percent')
             ? latestData['soh_percent']!.value
             : 0.0,
+        'alert': latestData.containsKey('alert')
+            ? latestData['alert']!.value.toInt()
+            : 0,
         'system_status': latestData.containsKey('status')
             ? latestData['status']!.valueAsString
             : 'unknown',

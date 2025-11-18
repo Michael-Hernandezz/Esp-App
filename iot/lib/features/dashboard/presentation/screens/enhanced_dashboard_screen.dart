@@ -17,7 +17,6 @@ class EnhancedDashboardScreen extends StatefulWidget {
 
 class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Map<String, dynamic> _systemStats = {};
-  List<SmartRoom> _iotRooms = [];
   bool _isLoading = true;
 
   @override
@@ -29,10 +28,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   Future<void> _loadSystemStats() async {
     try {
       final stats = await IoTDataService.getSystemStats();
-      final iotRooms = await IoTDataService.getRealIoTData();
       setState(() {
         _systemStats = stats;
-        _iotRooms = iotRooms;
         _isLoading = false;
       });
     } catch (e) {
@@ -234,25 +231,28 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withOpacity(0.6), width: 1.5),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 24),
+          Icon(icon, color: color, size: 28),
           const SizedBox(height: 8),
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: color,
+              fontSize: 18,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             title,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ],
@@ -308,7 +308,28 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
   }
 
   Widget _buildBMSSection() {
-    if (_iotRooms.isEmpty) {
+    // Obtener datos reales de InfluxDB directamente de las estadísticas
+    final sensorData = IoTSensorData(
+      deviceId: 'dev-001',
+      roomName: 'BMS Principal',
+      vBatConv: _systemStats['avg_battery_voltage'] ?? 0.0,
+      vOutConv: _systemStats['avg_output_voltage'] ?? 0.0,
+      vCell1: _systemStats['v_cell1'] ?? 0.0,
+      vCell2: _systemStats['v_cell2'] ?? 0.0,
+      vCell3: _systemStats['v_cell3'] ?? 0.0,
+      iCircuit: _systemStats['avg_current'] ?? 0.0,
+      socPercent: _systemStats['avg_soc'] ?? 0.0,
+      sohPercent: _systemStats['avg_soh'] ?? 0.0,
+      alert: _systemStats['alert'] ?? 0,
+      chgEnable: 0,
+      dsgEnable: 0,
+      cpEnable: 0,
+      pmonEnable: 1,
+      status: _systemStats['system_status'] ?? 'unknown',
+      lastUpdated: _systemStats['last_update'] ?? DateTime.now(),
+    );
+
+    if (_systemStats.isEmpty || _systemStats['total_devices'] == 0) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -331,28 +352,6 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
       );
     }
 
-    // Usar el primer dispositivo IoT encontrado
-    final firstDevice = _iotRooms.first;
-    final sensorData = IoTSensorData(
-      deviceId: firstDevice.id,
-      roomName: firstDevice.name,
-      vBatConv: firstDevice.temperature, // Mapeo temporal
-      vOutConv: 12.0, // Valor por defecto
-      vCell1: 3.7, // Valores simulados
-      vCell2: 3.6,
-      vCell3: 3.8,
-      iCircuit: 2.5,
-      socPercent: 75.0,
-      sohPercent: 95.0,
-      alert: 0,
-      chgEnable: 1,
-      dsgEnable: 1,
-      cpEnable: 0,
-      pmonEnable: 1,
-      status: 'ok',
-      lastUpdated: DateTime.now(),
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -366,10 +365,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen> {
         const SizedBox(height: 16),
         BMSDataWidget(sensorData: sensorData, onRefresh: _loadSystemStats),
         const SizedBox(height: 16),
-        BMSControlWidget(
-          deviceId: firstDevice.id,
-          onStateChanged: _loadSystemStats,
-        ),
+        BMSControlWidget(deviceId: 'dev-001', onStateChanged: _loadSystemStats),
       ],
     );
   }
